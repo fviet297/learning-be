@@ -1,7 +1,8 @@
 package com.learningapp.entity;
 
-import jakarta.persistence.*;
 import lombok.*;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "quiz_results")
