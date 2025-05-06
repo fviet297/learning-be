@@ -1,4 +1,4 @@
 package com.learningapp.service;
 
-public interface QuizServiceI {
+public interface QuizResultService {
 }
