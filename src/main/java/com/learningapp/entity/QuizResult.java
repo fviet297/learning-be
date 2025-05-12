@@ -6,7 +6,8 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "quiz_results")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class QuizResult {

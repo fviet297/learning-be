@@ -5,7 +5,8 @@ import lombok.*;
 
 @Entity
 @Table(name = "quizzes")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Quiz {
@@ -17,8 +18,12 @@ public class Quiz {
     private String question;
 
     @Column(name = "options", nullable = false, columnDefinition = "TEXT")
-    private String options; // JSON string: ["option1", "option2", "option3", "option4"]
+    private String options; // JSON array of 4 options
 
     @Column(name = "correct_answer", nullable = false)
-    private int correctAnswer; // Index of correct option (0-3)
+    private int correctAnswer; // 0-3 index of correct option
+
+    @ManyToOne
+    @JoinColumn(name = "study_module_id")
+    private StudyModule studyModule;
 }

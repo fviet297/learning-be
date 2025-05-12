@@ -5,7 +5,8 @@ import lombok.*;
 
 @Entity
 @Table(name = "flashcards")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Flashcard {
