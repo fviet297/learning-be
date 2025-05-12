@@ -9,10 +9,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Quiz {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class QuizEntity extends BaseEntity{
 
     @Column(name = "question", nullable = false, columnDefinition = "TEXT")
     private String question;
@@ -25,5 +22,5 @@ public class Quiz {
 
     @ManyToOne
     @JoinColumn(name = "study_module_id")
-    private StudyModule studyModule;
+    private StudyModuleEntity studyModuleEntity;
 }

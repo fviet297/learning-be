@@ -10,10 +10,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class QuizResult {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class QuizResultEntity extends BaseEntity{
 
     @Column(name = "user_id", nullable = false)
     private Long userId;

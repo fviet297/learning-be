@@ -1,6 +1,6 @@
 package com.learningapp.controller;
 
-import com.learningapp.entity.User;
+import com.learningapp.entity.UserEntity;
 import com.learningapp.repository.UserRepository;
 import com.learningapp.config.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,38 +29,38 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody User user) {
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+    public ResponseEntity<?> register(@RequestBody UserEntity userEntity) {
+        if (userRepository.findByUsername(userEntity.getUsername()).isPresent()) {
             return ResponseEntity.badRequest().body("Username already exists");
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+        userRepository.save(userEntity);
         String jwt = jwtService.generateToken(
                 org.springframework.security.core.userdetails.User
-                        .withUsername(user.getUsername())
-                        .password(user.getPassword())
+                        .withUsername(userEntity.getUsername())
+                        .password(userEntity.getPassword())
                         .authorities("USER")
                         .build()
         );
-        return ResponseEntity.ok(new AuthResponse(jwt, user.getId()));
+        return ResponseEntity.ok(new AuthResponse(jwt, userEntity.getId()));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user) {
+    public ResponseEntity<?> login(@RequestBody UserEntity userEntity) {
         try {
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
+                    new UsernamePasswordAuthenticationToken(userEntity.getUsername(), userEntity.getPassword())
             );
-            User foundUser = userRepository.findByUsername(user.getUsername())
+            UserEntity foundUserEntity = userRepository.findByUsername(userEntity.getUsername())
                     .orElseThrow(() -> new RuntimeException("User not found"));
             String jwt = jwtService.generateToken(
                     org.springframework.security.core.userdetails.User
-                            .withUsername(foundUser.getUsername())
-                            .password(foundUser.getPassword())
+                            .withUsername(foundUserEntity.getUsername())
+                            .password(foundUserEntity.getPassword())
                             .authorities("USER")
                             .build()
             );
-            return ResponseEntity.ok(new AuthResponse(jwt, foundUser.getId()));
+            return ResponseEntity.ok(new AuthResponse(jwt, foundUserEntity.getId()));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Invalid credentials");
         }

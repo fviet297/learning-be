@@ -1,6 +1,6 @@
 package com.learningapp.controller;
 
-import com.learningapp.entity.Flashcard;
+import com.learningapp.entity.FlashcardEntity;
 import com.learningapp.repository.FlashcardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,34 +21,34 @@ public class FlashcardController {
     }
 
     @PostMapping
-    public ResponseEntity<Flashcard> createFlashcard(@RequestBody Flashcard flashcard) {
-        if (flashcard.getContent() == null || flashcard.getContent().trim().isEmpty()) {
+    public ResponseEntity<FlashcardEntity> createFlashcard(@RequestBody FlashcardEntity flashcardEntity) {
+        if (flashcardEntity.getContent() == null || flashcardEntity.getContent().trim().isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-        flashcard.setStatus("LEARN");
-        Flashcard savedFlashcard = flashcardRepository.save(flashcard);
-        return ResponseEntity.ok(savedFlashcard);
+        flashcardEntity.setStatus("LEARN");
+        FlashcardEntity savedFlashcardEntity = flashcardRepository.save(flashcardEntity);
+        return ResponseEntity.ok(savedFlashcardEntity);
     }
 
     @GetMapping("/random")
-    public ResponseEntity<Flashcard> getRandomFlashcard() {
-        List<Flashcard> learnFlashcards = flashcardRepository.findByStatus("LEARN");
-        if (learnFlashcards.isEmpty()) {
+    public ResponseEntity<FlashcardEntity> getRandomFlashcard() {
+        List<FlashcardEntity> learnFlashcardEntities = flashcardRepository.findByStatus("LEARN");
+        if (learnFlashcardEntities.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        Flashcard randomFlashcard = learnFlashcards.get(new Random().nextInt(learnFlashcards.size()));
-        return ResponseEntity.ok(randomFlashcard);
+        FlashcardEntity randomFlashcardEntity = learnFlashcardEntities.get(new Random().nextInt(learnFlashcardEntities.size()));
+        return ResponseEntity.ok(randomFlashcardEntity);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Flashcard> updateFlashcardStatus(@PathVariable Long id, @RequestBody Flashcard updatedFlashcard) {
-        Flashcard flashcard = flashcardRepository.findById(id)
+    public ResponseEntity<FlashcardEntity> updateFlashcardStatus(@PathVariable Long id, @RequestBody FlashcardEntity updatedFlashcardEntity) {
+        FlashcardEntity flashcardEntity = flashcardRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Flashcard not found with id: " + id));
-        if (!"LEARN".equals(updatedFlashcard.getStatus()) && !"KNOWN".equals(updatedFlashcard.getStatus())) {
+        if (!"LEARN".equals(updatedFlashcardEntity.getStatus()) && !"KNOWN".equals(updatedFlashcardEntity.getStatus())) {
             return ResponseEntity.badRequest().build();
         }
-        flashcard.setStatus(updatedFlashcard.getStatus());
-        Flashcard savedFlashcard = flashcardRepository.save(flashcard);
-        return ResponseEntity.ok(savedFlashcard);
+        flashcardEntity.setStatus(updatedFlashcardEntity.getStatus());
+        FlashcardEntity savedFlashcardEntity = flashcardRepository.save(flashcardEntity);
+        return ResponseEntity.ok(savedFlashcardEntity);
     }
 }

@@ -1,6 +1,6 @@
-package com.learningapp.service;
+package com.learningapp.service.impl;
 
-import com.learningapp.entity.User;
+import com.learningapp.entity.UserEntity;
 import com.learningapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,11 +20,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
+        UserEntity userEntity = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
         return org.springframework.security.core.userdetails.User
-                .withUsername(user.getUsername())
-                .password(user.getPassword())
+                .withUsername(userEntity.getUsername())
+                .password(userEntity.getPassword())
                 .authorities("USER")
                 .build();
     }

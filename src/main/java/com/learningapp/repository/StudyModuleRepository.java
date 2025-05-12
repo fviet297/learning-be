@@ -1,7 +1,7 @@
 package com.learningapp.repository;
 
-import com.learningapp.entity.StudyModule;
+import com.learningapp.entity.StudyModuleEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface StudyModuleRepository extends JpaRepository<StudyModule, Long> {
+public interface StudyModuleRepository extends JpaRepository<StudyModuleEntity, String> {
 } 

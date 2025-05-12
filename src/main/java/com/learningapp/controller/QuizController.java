@@ -1,8 +1,8 @@
 package com.learningapp.controller;
 
 import com.learningapp.controller.dto.QuizSubmission;
-import com.learningapp.entity.Quiz;
-import com.learningapp.entity.QuizResult;
+import com.learningapp.entity.QuizEntity;
+import com.learningapp.entity.QuizResultEntity;
 import com.learningapp.repository.QuizRepository;
 import com.learningapp.repository.QuizResultRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,35 +25,35 @@ public class QuizController {
     }
 
     @PostMapping
-    public ResponseEntity<Quiz> createQuiz(@RequestBody Quiz quiz) {
-        if (quiz.getQuestion() == null || quiz.getQuestion().trim().isEmpty() ||
-                quiz.getOptions() == null || quiz.getCorrectAnswer() < 0 || quiz.getCorrectAnswer() > 3) {
+    public ResponseEntity<QuizEntity> createQuiz(@RequestBody QuizEntity quizEntity) {
+        if (quizEntity.getQuestion() == null || quizEntity.getQuestion().trim().isEmpty() ||
+                quizEntity.getOptions() == null || quizEntity.getCorrectAnswer() < 0 || quizEntity.getCorrectAnswer() > 3) {
             return ResponseEntity.badRequest().build();
         }
-        Quiz savedQuiz = quizRepository.save(quiz);
-        return ResponseEntity.ok(savedQuiz);
+        QuizEntity savedQuizEntity = quizRepository.save(quizEntity);
+        return ResponseEntity.ok(savedQuizEntity);
     }
 
     @GetMapping
-    public ResponseEntity<List<Quiz>> getAllQuizzes() {
-        List<Quiz> quizzes = quizRepository.findAll();
-        return ResponseEntity.ok(quizzes);
+    public ResponseEntity<List<QuizEntity>> getAllQuizzes() {
+        List<QuizEntity> quizEntities = quizRepository.findAll();
+        return ResponseEntity.ok(quizEntities);
     }
 
     @PostMapping("/submit")
-    public ResponseEntity<QuizResult> submitQuiz(@RequestBody QuizSubmission submission) {
+    public ResponseEntity<QuizResultEntity> submitQuiz(@RequestBody QuizSubmission submission) {
         if (submission.getQuizId() == null || submission.getSelectedOption() < 0 || submission.getSelectedOption() > 3) {
             return ResponseEntity.badRequest().build();
         }
-        Quiz quiz = quizRepository.findById(submission.getQuizId())
+        QuizEntity quizEntity = quizRepository.findById(submission.getQuizId())
                 .orElseThrow(() -> new RuntimeException("Quiz not found with id: " + submission.getQuizId()));
-        int score = submission.getSelectedOption() == quiz.getCorrectAnswer() ? 10 : 0;
+        int score = submission.getSelectedOption() == quizEntity.getCorrectAnswer() ? 10 : 0;
 
-        QuizResult result = new QuizResult();
+        QuizResultEntity result = new QuizResultEntity();
         result.setUserId(submission.getUserId());
         result.setQuizId(submission.getQuizId());
         result.setScore(score);
-        QuizResult savedResult = quizResultRepository.save(result);
+        QuizResultEntity savedResult = quizResultRepository.save(result);
         return ResponseEntity.ok(savedResult);
     }
 }
