@@ -7,6 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -14,7 +15,6 @@ import java.time.LocalDateTime;
 public abstract class BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @CreationTimestamp
@@ -30,4 +30,11 @@ public abstract class BaseEntity {
 
     @Column(name = "is_delete", nullable = false)
     private Integer isDelete = 0;
+
+    @PrePersist
+    private void generateId() {
+        if (id == null) {
+            id = UUID.randomUUID().toString();
+        }
+    }
 }

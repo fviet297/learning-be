@@ -1,4 +1,4 @@
 package com.learningapp.service.impl;
 
-public class QuizService {
+public class QuizServiceImpl {
 }

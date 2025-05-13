@@ -40,15 +40,15 @@ public class FlashcardController {
         return ResponseEntity.ok(randomFlashcardEntity);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<FlashcardEntity> updateFlashcardStatus(@PathVariable Long id, @RequestBody FlashcardEntity updatedFlashcardEntity) {
-        FlashcardEntity flashcardEntity = flashcardRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Flashcard not found with id: " + id));
-        if (!"LEARN".equals(updatedFlashcardEntity.getStatus()) && !"KNOWN".equals(updatedFlashcardEntity.getStatus())) {
-            return ResponseEntity.badRequest().build();
-        }
-        flashcardEntity.setStatus(updatedFlashcardEntity.getStatus());
-        FlashcardEntity savedFlashcardEntity = flashcardRepository.save(flashcardEntity);
-        return ResponseEntity.ok(savedFlashcardEntity);
-    }
+//    @PutMapping("/{id}")
+//    public ResponseEntity<FlashcardEntity> updateFlashcardStatus(@PathVariable Long id, @RequestBody FlashcardEntity updatedFlashcardEntity) {
+//        FlashcardEntity flashcardEntity = flashcardRepository.findById(id)
+//                .orElseThrow(() -> new RuntimeException("Flashcard not found with id: " + id));
+//        if (!"LEARN".equals(updatedFlashcardEntity.getStatus()) && !"KNOWN".equals(updatedFlashcardEntity.getStatus())) {
+//            return ResponseEntity.badRequest().build();
+//        }
+//        flashcardEntity.setStatus(updatedFlashcardEntity.getStatus());
+//        FlashcardEntity savedFlashcardEntity = flashcardRepository.save(flashcardEntity);
+//        return ResponseEntity.ok(savedFlashcardEntity);
+//    }
 }

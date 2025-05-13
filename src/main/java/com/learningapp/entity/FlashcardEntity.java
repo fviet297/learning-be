@@ -1,16 +1,9 @@
 package com.learningapp.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "flashcards")
 public class FlashcardEntity extends BaseEntity {
@@ -24,4 +17,28 @@ public class FlashcardEntity extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "study_module_id", nullable = false)
     private StudyModuleEntity studyModuleEntity;
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public StudyModuleEntity getStudyModuleEntity() {
+        return studyModuleEntity;
+    }
+
+    public void setStudyModuleEntity(StudyModuleEntity studyModuleEntity) {
+        this.studyModuleEntity = studyModuleEntity;
+    }
 }
