@@ -9,6 +9,13 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface FlashcardMapper {
 
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "content", source = "content")
+    @Mapping(target = "status", source = "status")
+    @Mapping(target = "studyModuleId", source = "studyModuleEntity.id")
     FlashcardResponse toResponse(FlashcardEntity flashcardEntity);
+
+    @Mapping(target = "content", source = "content")
+    @Mapping(target = "status", source = "status")
     FlashcardEntity toEntity(FlashcardRequest flashcardRequest);
 }

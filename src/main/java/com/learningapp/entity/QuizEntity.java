@@ -1,14 +1,13 @@
 package com.learningapp.entity;
 
-import javax.persistence.*;
-import lombok.*;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "quizzes")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class QuizEntity extends BaseEntity{
 
     @Column(name = "question", nullable = false, columnDefinition = "TEXT")

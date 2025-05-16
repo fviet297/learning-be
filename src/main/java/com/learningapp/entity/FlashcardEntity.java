@@ -1,11 +1,17 @@
 package com.learningapp.entity;
 
-import lombok.*;
-
-import javax.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "flashcards")
+@Getter
+@Setter
 public class FlashcardEntity extends BaseEntity {
 
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
@@ -17,28 +23,4 @@ public class FlashcardEntity extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "study_module_id", nullable = false)
     private StudyModuleEntity studyModuleEntity;
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public StudyModuleEntity getStudyModuleEntity() {
-        return studyModuleEntity;
-    }
-
-    public void setStudyModuleEntity(StudyModuleEntity studyModuleEntity) {
-        this.studyModuleEntity = studyModuleEntity;
-    }
 }
