@@ -1,8 +1,8 @@
 package com.learningapp.dto.request;
 
-import com.learningapp.dto.QuizDTO;
+import com.learningapp.dto.QuizResultDTO;
 import lombok.Getter;
 
 @Getter
-public class QuizResultRequest extends QuizDTO {
+public class QuizResultRequest extends QuizResultDTO {
 } 

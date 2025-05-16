@@ -1,17 +1,22 @@
 package com.learningapp.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
+import lombok.Setter;
+
+import java.io.Serializable;
 
 @Getter
-public class FlashcardDTO {
+@Setter
+public class FlashcardDTO implements Serializable {
 
-    @JsonProperty
+    private String id;
+
+    @NotBlank
+    private String studyModuleId;
+
+    @NotBlank(message = "không thể trống")
     private String content;
 
-    @JsonProperty
     private String status;
-
-    @JsonProperty
-    private String studyModuleId;
-} 
+}

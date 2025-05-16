@@ -1,14 +1,19 @@
 package com.learningapp.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-public class StudyModuleDTO {
+import java.io.Serializable;
 
-    @JsonProperty
+@Getter
+@Setter
+public class StudyModuleDTO implements Serializable {
+
+    private String id;
+
     private String description;
 
-    @JsonProperty
+    @NotBlank
     private String name;
 }

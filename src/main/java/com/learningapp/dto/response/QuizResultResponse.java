@@ -1,14 +1,6 @@
 package com.learningapp.dto.response;
 
-import com.learningapp.dto.UserDTO;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import com.learningapp.dto.QuizResultDTO;
 
-@Getter
-@Setter
-@Builder
-public class QuizResultResponse extends UserDTO {
-
-    private String id;
+public class QuizResultResponse extends QuizResultDTO {
 }

@@ -5,13 +5,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class QuizDTO {
+public class QuizResultDTO {
 
     private String id;
 
-    private String title;
+    private Long userId;
 
-    private String description;
+    private Long quizId;
 
-    private Long studyModuleId;
-} 
+    private int score;
+}
