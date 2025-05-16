@@ -1,43 +1,40 @@
-//package com.learningapp.controller;
-//
-//import com.learningapp.entity.StudyModuleEntity;
-//import com.learningapp.repository.StudyModuleRepository;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.*;
-//
-//import java.util.List;
-//
-//@RestController
-//@RequestMapping("/api/study-modules")
-//public class StudyModuleController {
-//
-//    private final StudyModuleRepository studyModuleRepository;
-//
-//    @Autowired
-//    public StudyModuleController(StudyModuleRepository studyModuleRepository) {
-//        this.studyModuleRepository = studyModuleRepository;
-//    }
-//
-//    @PostMapping
-//    public ResponseEntity<StudyModuleEntity> createStudyModule(@RequestBody StudyModuleEntity studyModuleEntity) {
-//        if (studyModuleEntity.getName() == null || studyModuleEntity.getName().trim().isEmpty()) {
-//            return ResponseEntity.badRequest().build();
-//        }
-//        StudyModuleEntity savedStudyModuleEntity = studyModuleRepository.save(studyModuleEntity);
-//        return ResponseEntity.ok(savedStudyModuleEntity);
-//    }
-//
-//    @GetMapping
+package com.learningapp.controller;
+
+import com.learningapp.dto.ResponseData;
+import com.learningapp.dto.request.StudyModuleRequest;
+import com.learningapp.dto.response.StudyModuleResponse;
+import com.learningapp.service.StudyModuleService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/study-modules")
+public class StudyModuleController {
+
+    private final StudyModuleService studyModuleService;
+
+    @Autowired
+    public StudyModuleController(StudyModuleService studyModuleService) {
+        this.studyModuleService = studyModuleService;
+    }
+
+    @PostMapping
+    public ResponseEntity<ResponseData> createStudyModule(@Valid @RequestBody StudyModuleRequest studyModuleRequest) {
+        final StudyModuleResponse studyModuleResponse = studyModuleService.create(studyModuleRequest);
+        return ResponseEntity.ok(ResponseData.builder().data(studyModuleResponse).build());
+    }
+
+    //    @GetMapping
 //    public ResponseEntity<List<StudyModuleEntity>> getAllStudyModules() {
 //        List<StudyModuleEntity> studyModuleEntities = studyModuleRepository.findAll();
 //        return ResponseEntity.ok(studyModuleEntities);
 //    }
 //
-//    @GetMapping("/{id}")
-//    public ResponseEntity<StudyModuleEntity> getStudyModuleById(@PathVariable Long id) {
-//        StudyModuleEntity studyModuleEntity = studyModuleRepository.findById(id)
-//                .orElseThrow(() -> new RuntimeException("Study module not found with id: " + id));
-//        return ResponseEntity.ok(studyModuleEntity);
-//    }
-//}
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseData> getStudyModuleById(@PathVariable String id) {
+        final StudyModuleResponse studyModuleResponse = studyModuleService.getById(id);
+        return ResponseEntity.ok(ResponseData.builder().data(studyModuleResponse).build());
+    }
+}
