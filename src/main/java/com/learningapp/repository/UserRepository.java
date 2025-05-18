@@ -1,9 +1,9 @@
 package com.learningapp.repository;
 
-import com.learningapp.entity.UserEntity;
+import com.learningapp.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<UserEntity, String> {
-    Optional<UserEntity> findByUsername(String username);
+public interface UserRepository extends JpaRepository<User, String> {
+    Optional<User> findByUsername(String username);
 }

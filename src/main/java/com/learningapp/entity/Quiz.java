@@ -8,7 +8,7 @@ import lombok.Setter;
 @Table(name = "quizzes")
 @Getter
 @Setter
-public class QuizEntity extends BaseEntity{
+public class Quiz extends BaseEntity{
 
     @Column(name = "question", nullable = false, columnDefinition = "TEXT")
     private String question;
@@ -21,5 +21,5 @@ public class QuizEntity extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "study_module_id")
-    private StudyModuleEntity studyModuleEntity;
+    private StudyModule studyModule;
 }

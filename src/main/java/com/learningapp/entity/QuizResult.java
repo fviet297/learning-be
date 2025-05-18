@@ -10,7 +10,7 @@ import lombok.Setter;
 @Table(name = "quiz_results")
 @Getter
 @Setter
-public class QuizResultEntity extends BaseEntity{
+public class QuizResult extends BaseEntity{
 
     @Column(name = "user_id", nullable = false)
     private Long userId;

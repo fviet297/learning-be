@@ -10,7 +10,7 @@ import lombok.Setter;
 @Table(name = "users")
 @Getter
 @Setter
-public class UserEntity extends BaseEntity{
+public class User extends BaseEntity{
 
     @Column(unique = true, nullable = false)
     private String username;
