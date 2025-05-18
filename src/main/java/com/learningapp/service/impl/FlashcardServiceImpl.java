@@ -2,8 +2,8 @@ package com.learningapp.service.impl;
 
 import com.learningapp.dto.request.FlashcardRequest;
 import com.learningapp.dto.response.FlashcardResponse;
-import com.learningapp.entity.FlashcardEntity;
-import com.learningapp.entity.StudyModuleEntity;
+import com.learningapp.entity.Flashcard;
+import com.learningapp.entity.StudyModule;
 import com.learningapp.mapper.FlashcardMapper;
 import com.learningapp.repository.FlashcardRepository;
 import com.learningapp.service.FlashcardService;
@@ -32,13 +32,13 @@ public class FlashcardServiceImpl implements FlashcardService {
     @Override
     public FlashcardResponse create(final FlashcardRequest flashcardRequest) {
         if(Objects.nonNull(flashcardRequest)){
-            FlashcardEntity flashcardEntity = flashcardMapper.toEntity(flashcardRequest);
-            StudyModuleEntity studyModuleEntity = studyModuleService.findById(flashcardRequest.getStudyModuleId());
-            flashcardEntity.setStudyModuleEntity(studyModuleEntity);
-            flashcardEntity.setStatus("LEARN");
-            flashcardEntity =  flashcardRepository.save(flashcardEntity);
-            if(Objects.nonNull(flashcardEntity)){
-                return flashcardMapper.toResponse(flashcardEntity);
+            Flashcard flashcard = flashcardMapper.toEntity(flashcardRequest);
+            StudyModule studyModule = studyModuleService.getEntityById(flashcardRequest.getStudyModuleId());
+            flashcard.setStudyModule(studyModule);
+            flashcard.setStatus("LEARN");
+            flashcard =  flashcardRepository.save(flashcard);
+            if(Objects.nonNull(flashcard)){
+                return flashcardMapper.toResponse(flashcard);
             }
         }
         return null;

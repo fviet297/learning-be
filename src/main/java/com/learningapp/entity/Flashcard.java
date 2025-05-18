@@ -12,15 +12,18 @@ import lombok.Setter;
 @Table(name = "flashcards")
 @Getter
 @Setter
-public class FlashcardEntity extends BaseEntity {
+public class Flashcard extends BaseEntity {
 
-    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
-    private String content;
+    @Column(name = "question", nullable = false, columnDefinition = "TEXT")
+    private String question;
+
+    @Column(name = "answer", nullable = false, columnDefinition = "TEXT")
+    private String answer;
 
     @Column(name = "status", nullable = false, length = 10)
     private String status; // "LEARN" or "KNOWN"
 
     @ManyToOne
     @JoinColumn(name = "study_module_id", nullable = false)
-    private StudyModuleEntity studyModuleEntity;
+    private StudyModule studyModule;
 }

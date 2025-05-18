@@ -13,10 +13,10 @@ public class FlashcardDTO implements Serializable {
     private String id;
 
     @NotBlank
-    private String studyModuleId;
+    private String question;
 
-    @NotBlank(message = "không thể trống")
-    private String content;
+    @NotBlank
+    private String answer;
 
     private String status;
 }
