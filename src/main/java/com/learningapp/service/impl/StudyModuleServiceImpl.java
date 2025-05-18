@@ -16,32 +16,50 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+/**
+ * Implementation of the StudyModuleService interface.
+ * This class provides the business logic for managing study modules.
+ */
 @Service
 public class StudyModuleServiceImpl implements StudyModuleService {
 
     private final StudyModuleRepository studyModuleRepository;
     private final StudyModuleMapper studyModuleMapper;
 
+    /**
+     * Constructs a new StudyModuleServiceImpl with required dependencies.
+     *
+     * @param studyModuleRepository the repository for study module data access
+     * @param studyModuleMapper the mapper for converting between DTOs and entities
+     */
     @Autowired
     public StudyModuleServiceImpl(final StudyModuleRepository studyModuleRepository, final StudyModuleMapper studyModuleMapper) {
         this.studyModuleRepository = studyModuleRepository;
         this.studyModuleMapper = studyModuleMapper;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public StudyModuleResponse create(@NotNull final StudyModuleRequest studyModuleRequest) {
-
         StudyModule studyModule = studyModuleMapper.toEntity(studyModuleRequest);
         studyModule = studyModuleRepository.save(studyModule);
         return studyModuleMapper.toResponse(studyModule);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public StudyModuleResponse getById(@NotBlank final String id) {
         final StudyModule studyModule = this.getEntityById(id);
         return studyModuleMapper.toResponse(studyModule);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public StudyModule getEntityById(@NotBlank final String id) {
         return studyModuleRepository
@@ -55,6 +73,9 @@ public class StudyModuleServiceImpl implements StudyModuleService {
                                 )));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Page<StudyModuleProjection> getPageStudyModules(final Pageable pageable) {
         return studyModuleRepository

@@ -48,7 +48,6 @@ class StudyModuleServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Khởi tạo dữ liệu mẫu
         studyModule = new StudyModule();
         studyModule.setId("1");
         studyModule.setName("Test Module");
