@@ -2,8 +2,9 @@ package com.learningapp.service.impl;
 
 import com.learningapp.constants.CoreConstants;
 import com.learningapp.dto.request.StudyModuleRequest;
+import com.learningapp.dto.response.StudyModuleProjection;
 import com.learningapp.dto.response.StudyModuleResponse;
-import com.learningapp.entity.StudyModuleEntity;
+import com.learningapp.entity.StudyModule;
 import com.learningapp.exception.NotFoundException;
 import com.learningapp.mapper.StudyModuleMapper;
 import com.learningapp.repository.StudyModuleRepository;
@@ -11,6 +12,8 @@ import com.learningapp.service.StudyModuleService;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,27 +31,37 @@ public class StudyModuleServiceImpl implements StudyModuleService {
     @Override
     public StudyModuleResponse create(@NotNull final StudyModuleRequest studyModuleRequest) {
 
-        StudyModuleEntity studyModuleEntity = studyModuleMapper.toEntity(studyModuleRequest);
-        studyModuleEntity = studyModuleRepository.save(studyModuleEntity);
-        return studyModuleMapper.toResponse(studyModuleEntity);
+        StudyModule studyModule = studyModuleMapper.toEntity(studyModuleRequest);
+        studyModule = studyModuleRepository.save(studyModule);
+        return studyModuleMapper.toResponse(studyModule);
     }
 
     @Override
     public StudyModuleResponse getById(@NotBlank final String id) {
-        final StudyModuleEntity studyModuleEntity = this.findById(id);
-        return studyModuleMapper.toResponse(studyModuleEntity);
+        final StudyModule studyModule = this.getEntityById(id);
+        return studyModuleMapper.toResponse(studyModule);
     }
 
     @Override
-    public StudyModuleEntity findById(@NotBlank final String id) {
+    public StudyModule getEntityById(@NotBlank final String id) {
         return studyModuleRepository
                 .findByIdAndIsDeleteFalse(id)
-                .orElseThrow(() ->
-                        new NotFoundException(
+                .orElseThrow(
+                        () -> new NotFoundException(
                                 String.format(
                                         CoreConstants.MESSAGE_ERROR.NOT_FOUND_ENTITY,
-                                        StudyModuleEntity.class.getSimpleName(),
+                                        StudyModule.class.getSimpleName(),
                                         id
                                 )));
+    }
+
+    @Override
+    public Page<StudyModuleProjection> getPageStudyModules(final Pageable pageable) {
+        return studyModuleRepository
+                .findAllStudyModuleEntitiesByIsDeleteFalse(pageable)
+                .orElseThrow(() -> new NotFoundException(String.format(
+                        CoreConstants.MESSAGE_ERROR.NO_DATA,
+                        StudyModule.class.getSimpleName()
+                )));
     }
 }
