@@ -50,6 +50,9 @@ public class FlashcardServiceImpl implements FlashcardService {
     @Override
     public FlashcardResponse random(@NotNull final String studyModuleId) {
         final List<Flashcard> flashcard = flashcardRepository.findByStatusAndStudyModuleId(FlashcardStatus.LEARN, studyModuleId);
+        if (flashcard.isEmpty()) {
+            return null;
+        }
         final Flashcard randomFlashcard = flashcard.get(new Random().nextInt(flashcard.size()));
         return flashcardMapper.toResponse(randomFlashcard);
     }
