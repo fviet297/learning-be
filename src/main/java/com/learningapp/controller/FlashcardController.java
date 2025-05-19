@@ -2,14 +2,14 @@ package com.learningapp.controller;
 
 import com.learningapp.dto.ResponseData;
 import com.learningapp.dto.request.FlashcardRequest;
+import com.learningapp.dto.response.FlashcardResponse;
 import com.learningapp.service.FlashcardService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/flashcards")
@@ -24,31 +24,22 @@ public class FlashcardController {
 
     @PostMapping
     public ResponseEntity<ResponseData> createFlashcard(@Valid @RequestBody FlashcardRequest flashcardRequest) {
-        return ResponseEntity.ok(
-                ResponseData.builder()
-                        .data(flashcardService.create(flashcardRequest))
-                        .build());
+        final FlashcardResponse flashcardResponse = flashcardService.create(flashcardRequest);
+        return ResponseEntity.ok(ResponseData.builder().data(flashcardResponse).build());
     }
 
-//    @GetMapping("/random")
-//    public ResponseEntity<FlashcardEntity> getRandomFlashcard() {
-//        List<FlashcardEntity> learnFlashcardEntities = flashcardRepository.findByStatus("LEARN");
-//        if (learnFlashcardEntities.isEmpty()) {
-//            return ResponseEntity.noContent().build();
-//        }
-//        FlashcardEntity randomFlashcardEntity = learnFlashcardEntities.get(new Random().nextInt(learnFlashcardEntities.size()));
-//        return ResponseEntity.ok(randomFlashcardEntity);
-//    }
+    @GetMapping("/random/{studyModuleId}")
+    public ResponseEntity<ResponseData> getRandomFlashcard(@PathVariable String studyModuleId) {
+        final FlashcardResponse flashcardResponse = flashcardService.random(studyModuleId);
+        if (Objects.isNull(flashcardResponse)) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(ResponseData.builder().data(flashcardResponse).build());
+    }
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<FlashcardEntity> updateFlashcardStatus(@PathVariable Long id, @RequestBody FlashcardEntity updatedFlashcardEntity) {
-//        FlashcardEntity flashcardEntity = flashcardRepository.findById(id)
-//                .orElseThrow(() -> new RuntimeException("Flashcard not found with id: " + id));
-//        if (!"LEARN".equals(updatedFlashcardEntity.getStatus()) && !"KNOWN".equals(updatedFlashcardEntity.getStatus())) {
-//            return ResponseEntity.badRequest().build();
-//        }
-//        flashcardEntity.setStatus(updatedFlashcardEntity.getStatus());
-//        FlashcardEntity savedFlashcardEntity = flashcardRepository.save(flashcardEntity);
-//        return ResponseEntity.ok(savedFlashcardEntity);
-//    }
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseData> updateFlashcardStatus(@PathVariable String id, @RequestBody FlashcardRequest flashcardRequest) {
+        final FlashcardResponse flashcardResponse = flashcardService.updateFlashcardStatus(id,flashcardRequest.getStatus());
+        return ResponseEntity.ok(ResponseData.builder().data(flashcardResponse).build());
+    }
 }

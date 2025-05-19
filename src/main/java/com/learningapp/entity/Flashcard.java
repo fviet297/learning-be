@@ -1,10 +1,7 @@
 package com.learningapp.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.learningapp.enums.FlashcardStatus;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,8 +17,8 @@ public class Flashcard extends BaseEntity {
     @Column(name = "answer", nullable = false, columnDefinition = "TEXT")
     private String answer;
 
-    @Column(name = "status", nullable = false, length = 10)
-    private String status; // "LEARN" or "KNOWN"
+    @Enumerated(EnumType.STRING)
+    private FlashcardStatus status;
 
     @ManyToOne
     @JoinColumn(name = "study_module_id", nullable = false)
