@@ -13,10 +13,10 @@ import lombok.Setter;
 public class QuizResult extends BaseEntity{
 
     @Column(name = "user_id", nullable = false)
-    private Long userId;
+    private String userId;
 
     @Column(name = "quiz_id", nullable = false)
-    private Long quizId;
+    private String quizId;
 
     @Column(name = "score", nullable = false)
     private int score;

@@ -74,7 +74,7 @@ public class FlashcardServiceImpl implements FlashcardService {
                             () -> new NotFoundException(
                                     String.format(
                                             CoreConstants.MESSAGE_ERROR.NOT_FOUND_ENTITY,
-                                            StudyModule.class.getSimpleName(),
+                                            Flashcard.class.getSimpleName(),
                                             id
                                     )));
         }

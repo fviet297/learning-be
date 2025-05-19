@@ -1,8 +1,8 @@
 package com.learningapp.dto.request;
 
 import com.learningapp.dto.QuizResultDTO;
-import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 
-@Getter
+@SuperBuilder
 public class QuizResultRequest extends QuizResultDTO {
 } 
