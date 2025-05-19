@@ -41,6 +41,10 @@ public class StudyModuleController {
     ) {
         final Pageable pageable = PageRequest.of(page, size, Sort.by(sort).descending());
         final Page<StudyModuleProjection> pageStudyModules = studyModuleService.getPageStudyModules(pageable);
+
+        if (!pageStudyModules.hasContent()) {
+            return ResponseEntity.noContent().build();
+        }
         final PageCustom<StudyModuleProjection> pageCustom = PageCustom.from(pageStudyModules);
         return ResponseEntity.ok(ResponseData.builder().data(pageCustom).build());
     }
