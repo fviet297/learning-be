@@ -1,9 +1,8 @@
-package com.learningapp.service;
+package com.learningapp.mapper;
 
 import com.learningapp.dto.request.StudyModuleRequest;
 import com.learningapp.dto.response.StudyModuleResponse;
 import com.learningapp.entity.StudyModule;
-import com.learningapp.mapper.StudyModuleMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
@@ -21,10 +20,8 @@ class StudyModuleMapperTest {
 
     @BeforeEach
     void setUp() {
-        // Lấy instance của StudyModuleMapper
         studyModuleMapper = Mappers.getMapper(StudyModuleMapper.class);
 
-        // Dữ liệu mẫu
         studyModuleRequest = new StudyModuleRequest();
         studyModuleRequest.setName("Test Module");
         studyModuleRequest.setDescription("Test Description");
@@ -44,7 +41,7 @@ class StudyModuleMapperTest {
 
         // Assert
         assertNotNull(result);
-        assertNull(result.getId()); // id bị ignore
+        assertNull(result.getId());
         assertEquals("Test Module", result.getName());
         assertEquals("Test Description", result.getDescription());
     }
