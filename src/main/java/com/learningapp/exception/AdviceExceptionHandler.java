@@ -4,7 +4,9 @@ import com.learningapp.dto.ErrorDetail;
 import com.learningapp.dto.ResponseData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -58,5 +60,14 @@ public class AdviceExceptionHandler {
                 Collections.singletonList(ErrorDetail.builder().errorCode("NOT_FOUND_ERROR").message(ex.getMessage()).build()
                 )).build();
         return ResponseEntity.badRequest().body(responseData);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ResponseData> handleNotFoundException(final BadCredentialsException ex) {
+
+        final ResponseData responseData = ResponseData.builder().errorDetails(
+                Collections.singletonList(ErrorDetail.builder().errorCode("BAD_CREDENTIALS").message(ex.getMessage()).build()
+                )).build();
+        return new ResponseEntity<>(responseData, HttpStatus.UNAUTHORIZED);
     }
 }
