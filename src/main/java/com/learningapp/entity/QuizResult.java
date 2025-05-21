@@ -15,8 +15,8 @@ public class QuizResult extends BaseEntity{
     @Column(name = "user_id", nullable = false)
     private String userId;
 
-    @Column(name = "quiz_id", nullable = false)
-    private String quizId;
+    @Column(name = "study_module_id", nullable = false)
+    private String studyModuleId;
 
     @Column(name = "score", nullable = false)
     private int score;

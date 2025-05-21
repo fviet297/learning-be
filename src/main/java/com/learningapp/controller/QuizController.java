@@ -1,10 +1,8 @@
 package com.learningapp.controller;
 
-import com.learningapp.dto.QuizSubmission;
 import com.learningapp.dto.ResponseData;
 import com.learningapp.dto.request.QuizRequest;
 import com.learningapp.dto.response.QuizResponse;
-import com.learningapp.dto.response.QuizResultResponse;
 import com.learningapp.service.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -36,11 +34,5 @@ public class QuizController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(ResponseData.builder().data(quizResponses).build());
-    }
-
-    @PostMapping("/submit")
-    public ResponseEntity<ResponseData> submitQuiz(@RequestBody QuizSubmission submission) {
-        final QuizResultResponse quizResultResponse = quizService.submitQuiz(submission);
-        return ResponseEntity.ok(ResponseData.builder().data(quizResultResponse).build());
     }
 }

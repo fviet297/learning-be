@@ -1,11 +1,8 @@
 package com.learningapp.service.impl;
 
 import com.learningapp.constants.CoreConstants;
-import com.learningapp.dto.QuizSubmission;
 import com.learningapp.dto.request.QuizRequest;
-import com.learningapp.dto.request.QuizResultRequest;
 import com.learningapp.dto.response.QuizResponse;
-import com.learningapp.dto.response.QuizResultResponse;
 import com.learningapp.entity.Quiz;
 import com.learningapp.entity.StudyModule;
 import com.learningapp.exception.NotFoundException;
@@ -62,19 +59,6 @@ public class QuizServiceImpl implements QuizService {
                                 Quiz.class.getSimpleName(),
                                 id
                         )));
-    }
-
-    @Override
-    public QuizResultResponse submitQuiz(@NotNull final QuizSubmission quizSubmission) {
-        final Quiz quiz = this.getEntityById(quizSubmission.getQuizId());
-        final int score = quizSubmission.getSelectedOption() == quiz.getCorrectAnswer()
-                ? 10 : 0;
-
-        final QuizResultRequest quizResultRequest = QuizResultRequest.builder()
-                .quizId(quizSubmission.getQuizId())
-                .userId(quizSubmission.getUserId())
-                .score(score).build();
-        return quizResultService.create(quizResultRequest);
     }
 
 }

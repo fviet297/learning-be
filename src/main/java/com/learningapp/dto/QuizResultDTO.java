@@ -17,7 +17,7 @@ public class QuizResultDTO {
 
     private String userId;
 
-    private String quizId;
+    private String studyModuleId;
 
     private int score;
 }
