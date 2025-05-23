@@ -2,6 +2,7 @@ package com.learningapp.controller;
 
 import com.learningapp.dto.ResponseData;
 import com.learningapp.dto.request.FlashcardRequest;
+import com.learningapp.dto.request.FlashcardRequestBulk;
 import com.learningapp.dto.response.FlashcardResponse;
 import com.learningapp.service.FlashcardService;
 import jakarta.validation.Valid;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -23,8 +25,8 @@ public class FlashcardController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseData> createFlashcard(@Valid @RequestBody FlashcardRequest flashcardRequest) {
-        final FlashcardResponse flashcardResponse = flashcardService.create(flashcardRequest);
+    public ResponseEntity<ResponseData> createFlashcardsBulk(@Valid @RequestBody FlashcardRequestBulk flashcardRequestBulk) {
+        final List<FlashcardResponse> flashcardResponse = flashcardService.createBulk(flashcardRequestBulk);
         return ResponseEntity.ok(ResponseData.builder().data(flashcardResponse).build());
     }
 

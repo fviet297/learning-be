@@ -1,7 +1,7 @@
 package com.learningapp.service.impl;
 
 import com.learningapp.constants.CoreConstants;
-import com.learningapp.dto.request.FlashcardRequest;
+import com.learningapp.dto.request.FlashcardRequestBulk;
 import com.learningapp.dto.response.FlashcardResponse;
 import com.learningapp.entity.Flashcard;
 import com.learningapp.entity.StudyModule;
@@ -37,14 +37,19 @@ public class FlashcardServiceImpl implements FlashcardService {
     }
 
     @Override
-    public FlashcardResponse create(@NotNull final FlashcardRequest flashcardRequest) {
-        Flashcard flashcard = flashcardMapper.toEntity(flashcardRequest);
+    public List<FlashcardResponse> createBulk(@NotNull final FlashcardRequestBulk flashcardRequestBulk) {
+        List<Flashcard> flashcards = flashcardMapper.toEntity(flashcardRequestBulk.getFlashcardRequests());
 
-        final StudyModule studyModule = studyModuleService.getEntityById(flashcardRequest.getStudyModuleId());
-        flashcard.setStudyModule(studyModule);
-        flashcard.setStatus(FlashcardStatus.LEARN);
-        flashcard = flashcardRepository.save(flashcard);
-        return flashcardMapper.toResponse(flashcard);
+        final StudyModule studyModule = studyModuleService.getEntityById(flashcardRequestBulk.getStudyModuleId());
+
+        flashcards.forEach(i -> {
+            i.setStudyModule(studyModule);
+            i.setStatus(FlashcardStatus.LEARN);
+        });
+
+        flashcards = flashcardRepository.saveAll(flashcards);
+
+        return flashcardMapper.toResponse(flashcards);
     }
 
     @Override
