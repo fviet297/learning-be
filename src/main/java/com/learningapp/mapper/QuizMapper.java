@@ -15,4 +15,6 @@ public interface QuizMapper {
     Quiz toEntity(QuizRequest quizRequest);
 
     List<QuizResponse> toResponses(List<Quiz> quizzes);
+
+    List<Quiz> toEntity(List<QuizRequest> quizRequests);
 }

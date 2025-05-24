@@ -1,7 +1,7 @@
 package com.learningapp.controller;
 
 import com.learningapp.dto.ResponseData;
-import com.learningapp.dto.request.QuizRequest;
+import com.learningapp.dto.request.QuizRequestBulk;
 import com.learningapp.dto.response.QuizResponse;
 import com.learningapp.service.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +22,8 @@ public class QuizController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseData> createQuiz(@RequestBody QuizRequest quizRequest) {
-        final QuizResponse quizResponse = quizService.create(quizRequest);
+    public ResponseEntity<ResponseData> createQuiz(@RequestBody QuizRequestBulk quizRequestBulk) {
+        final List<QuizResponse> quizResponse = quizService.create(quizRequestBulk);
         return ResponseEntity.ok(ResponseData.builder().data(quizResponse).build());
     }
 
@@ -34,5 +34,10 @@ public class QuizController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(ResponseData.builder().data(quizResponses).build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseData> deleteQuiz(@PathVariable final String id) {
+        return ResponseEntity.ok(quizService.deleteQuiz(id));
     }
 }

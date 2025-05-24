@@ -1,5 +1,6 @@
 package com.learningapp.service;
 
+import com.learningapp.dto.ResponseData;
 import com.learningapp.dto.request.FlashcardRequestBulk;
 import com.learningapp.dto.response.FlashcardResponse;
 import com.learningapp.entity.Flashcard;
@@ -15,6 +16,10 @@ public interface FlashcardService {
     List<FlashcardResponse> createBulk(@NotNull FlashcardRequestBulk flashcardRequestBulk);
 
     FlashcardResponse random(@NotNull String studyModuleId);
+
+    List<FlashcardResponse> getFlashcardsByModuleId(String moduleId);
+
+    ResponseData deleteFlashcard(String id);
 
     @Transactional
     FlashcardResponse updateFlashcardStatus(@NotBlank String id, FlashcardStatus status);

@@ -39,6 +39,20 @@ public class FlashcardController {
         return ResponseEntity.ok(ResponseData.builder().data(flashcardResponse).build());
     }
 
+    @GetMapping("/{studyModuleId}")
+    public ResponseEntity<ResponseData> getFlashcardsByModuleId(@PathVariable String studyModuleId) {
+        final List<FlashcardResponse> flashcardResponse = flashcardService.getFlashcardsByModuleId(studyModuleId);
+        if (Objects.isNull(flashcardResponse)) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(ResponseData.builder().data(flashcardResponse).build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseData> deleteFlashcard(@PathVariable String id) {
+        return ResponseEntity.ok(ResponseData.builder().data(flashcardService.deleteFlashcard(id)).build());
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<ResponseData> updateFlashcardStatus(@PathVariable String id, @RequestBody FlashcardRequest flashcardRequest) {
         final FlashcardResponse flashcardResponse = flashcardService.updateFlashcardStatus(id,flashcardRequest.getStatus());

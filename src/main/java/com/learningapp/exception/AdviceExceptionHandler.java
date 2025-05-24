@@ -35,9 +35,7 @@ public class AdviceExceptionHandler {
 
         final List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
         final List<ErrorDetail> errorDetails = fieldErrors.stream().map(i -> {
-            final StringBuilder msg = new StringBuilder();
-            msg.append(i.getField()).append(" ").append(i.getDefaultMessage());
-            return ErrorDetail.builder().errorCode("VALIDATION_ERROR").message(msg.toString()).build();
+            return ErrorDetail.builder().errorCode("VALIDATION_ERROR").message(i.getField() + " " + i.getDefaultMessage()).build();
         }).collect(Collectors.toList());
 
         final ResponseData responseData = ResponseData.builder().errorDetails(errorDetails).build();

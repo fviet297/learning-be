@@ -1,7 +1,8 @@
 package com.learningapp.service.impl;
 
 import com.learningapp.constants.CoreConstants;
-import com.learningapp.dto.request.QuizRequest;
+import com.learningapp.dto.ResponseData;
+import com.learningapp.dto.request.QuizRequestBulk;
 import com.learningapp.dto.response.QuizResponse;
 import com.learningapp.entity.Quiz;
 import com.learningapp.entity.StudyModule;
@@ -11,6 +12,7 @@ import com.learningapp.repository.QuizRepository;
 import com.learningapp.service.QuizResultService;
 import com.learningapp.service.QuizService;
 import com.learningapp.service.StudyModuleService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,18 +38,31 @@ public class QuizServiceImpl implements QuizService {
     }
 
     @Override
-    public QuizResponse create(@NotNull final QuizRequest quizRequest) {
-        Quiz quizEntity = quizMapper.toEntity(quizRequest);
-        final StudyModule studyModule = studyModuleService.getEntityById(quizRequest.getStudyModuleId());
-        quizEntity.setStudyModule(studyModule);
-        quizEntity = quizRepository.save(quizEntity);
-        return quizMapper.toResponse(quizEntity);
+    public List<QuizResponse> create(@NotNull final QuizRequestBulk quizRequestBulk) {
+
+        List<Quiz> quizzes = quizMapper.toEntity(quizRequestBulk.getQuizRequests());
+        final StudyModule studyModule = studyModuleService.getEntityById(quizRequestBulk.getStudyModuleId());
+
+        quizzes.forEach(quiz -> {
+                    quiz.setStudyModule(studyModule);
+                }
+        );
+        quizzes = quizRepository.saveAll(quizzes);
+        return quizMapper.toResponses(quizzes);
     }
 
     @Override
     public List<QuizResponse> getQuizzesByStudyModuleId(final String studyModuleId) {
         final List<Quiz> quizzes = quizRepository.findByStudyModuleId(studyModuleId);
         return quizMapper.toResponses(quizzes);
+    }
+
+    @Transactional
+    @Override
+    public ResponseData deleteQuiz(final String id) {
+        final Quiz quiz = getEntityById(id);
+        quiz.setIsDelete(1);
+        return ResponseData.builder().build();
     }
 
     @Override

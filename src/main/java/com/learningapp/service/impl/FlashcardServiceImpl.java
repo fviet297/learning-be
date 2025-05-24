@@ -1,6 +1,7 @@
 package com.learningapp.service.impl;
 
 import com.learningapp.constants.CoreConstants;
+import com.learningapp.dto.ResponseData;
 import com.learningapp.dto.request.FlashcardRequestBulk;
 import com.learningapp.dto.response.FlashcardResponse;
 import com.learningapp.entity.Flashcard;
@@ -54,12 +55,29 @@ public class FlashcardServiceImpl implements FlashcardService {
 
     @Override
     public FlashcardResponse random(@NotNull final String studyModuleId) {
-        final List<Flashcard> flashcard = flashcardRepository.findByStatusAndStudyModuleId(FlashcardStatus.LEARN, studyModuleId);
-        if (flashcard.isEmpty()) {
+        final List<Flashcard> flashcards = flashcardRepository.findByStatusAndStudyModuleId(FlashcardStatus.LEARN, studyModuleId);
+        if (flashcards.isEmpty()) {
             return null;
         }
-        final Flashcard randomFlashcard = flashcard.get(new Random().nextInt(flashcard.size()));
+        final Flashcard randomFlashcard = flashcards.get(new Random().nextInt(flashcards.size()));
         return flashcardMapper.toResponse(randomFlashcard);
+    }
+
+    @Override
+    public List<FlashcardResponse> getFlashcardsByModuleId(final String moduleId){
+        final List<Flashcard> flashcards = flashcardRepository.findByStudyModuleId(moduleId);
+        if(flashcards.isEmpty()){
+            return null;
+        }
+        return flashcardMapper.toResponse(flashcards);
+    }
+
+    @Override
+    @Transactional
+    public ResponseData deleteFlashcard(final String id){
+        Flashcard flashcard = getEntityById(id);
+        flashcard.setIsDelete(1);
+        return ResponseData.builder().build();
     }
 
     @Transactional

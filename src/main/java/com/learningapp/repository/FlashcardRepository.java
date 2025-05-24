@@ -23,6 +23,9 @@ public interface FlashcardRepository extends JpaRepository<Flashcard, String> {
     @Query("SELECT f FROM Flashcard f WHERE f.status = :status AND f.isDelete = false AND f.studyModule.id = :studyModuleId")
     List<Flashcard> findByStatusAndStudyModuleId(@Param("status") FlashcardStatus status, @Param("studyModuleId") String studyModuleId);
 
+    @Query("SELECT f FROM Flashcard f WHERE f.isDelete = false AND f.studyModule.id = :studyModuleId")
+    List<Flashcard> findByStudyModuleId(@Param("studyModuleId") String studyModuleId);
+
     /**
      *
      * @param id
