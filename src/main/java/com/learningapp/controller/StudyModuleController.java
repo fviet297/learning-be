@@ -54,4 +54,9 @@ public class StudyModuleController {
         final StudyModuleResponse studyModuleResponse = studyModuleService.getById(id);
         return ResponseEntity.ok(ResponseData.builder().data(studyModuleResponse).build());
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseData> deleteModule(@PathVariable final String id){
+        return ResponseEntity.ok(studyModuleService.deleteModule(id));
+    }
 }

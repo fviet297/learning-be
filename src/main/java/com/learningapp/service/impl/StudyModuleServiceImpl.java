@@ -65,10 +65,10 @@ public class StudyModuleServiceImpl implements StudyModuleService {
         final StudyModule studyModule = getEntityById(id);
         studyModule.setIsDelete(1);
         studyModule.getFlashcards().forEach(f->{
-            getEntityById(f.getId()).setIsDelete(1);
+            f.setIsDelete(1);
         });
         studyModule.getQuizzes().forEach(q->{
-            getEntityById(q.getId()).setIsDelete(1);
+            q.setIsDelete(1);
         });
         return ResponseData.builder().build();
     }
