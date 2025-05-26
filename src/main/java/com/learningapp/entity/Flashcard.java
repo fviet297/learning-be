@@ -4,11 +4,13 @@ import com.learningapp.enums.FlashcardStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name = "flashcards")
 @Getter
 @Setter
+@Where(clause = "is_delete = '0'")
 public class Flashcard extends BaseEntity {
 
     @Column(name = "question", nullable = false, columnDefinition = "TEXT")

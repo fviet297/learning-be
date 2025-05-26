@@ -3,11 +3,13 @@ package com.learningapp.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name = "quizzes")
 @Getter
 @Setter
+@Where(clause = "is_delete = '0'")
 public class Quiz extends BaseEntity{
 
     @Column(name = "question", nullable = false, columnDefinition = "TEXT")
