@@ -1,9 +1,11 @@
 package com.learningapp.service;
 
+import com.learningapp.dto.ResponseData;
 import com.learningapp.dto.request.StudyModuleRequest;
 import com.learningapp.dto.response.StudyModuleProjection;
 import com.learningapp.dto.response.StudyModuleResponse;
 import com.learningapp.entity.StudyModule;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -27,6 +29,9 @@ public interface StudyModuleService {
      * @return the study module response
      */
     StudyModuleResponse getById(String id);
+
+    @Transactional
+    ResponseData deleteModule(String id);
 
     /**
      * Retrieves a study module entity by its ID.

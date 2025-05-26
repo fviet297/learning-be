@@ -1,6 +1,7 @@
 package com.learningapp.service.impl;
 
 import com.learningapp.constants.CoreConstants;
+import com.learningapp.dto.ResponseData;
 import com.learningapp.dto.request.StudyModuleRequest;
 import com.learningapp.dto.response.StudyModuleProjection;
 import com.learningapp.dto.response.StudyModuleResponse;
@@ -9,6 +10,7 @@ import com.learningapp.exception.NotFoundException;
 import com.learningapp.mapper.StudyModuleMapper;
 import com.learningapp.repository.StudyModuleRepository;
 import com.learningapp.service.StudyModuleService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +57,20 @@ public class StudyModuleServiceImpl implements StudyModuleService {
     public StudyModuleResponse getById(@NotBlank final String id) {
         final StudyModule studyModule = this.getEntityById(id);
         return studyModuleMapper.toResponse(studyModule);
+    }
+
+    @Transactional
+    @Override
+    public ResponseData deleteModule(final String id){
+        final StudyModule studyModule = getEntityById(id);
+        studyModule.setIsDelete(1);
+        studyModule.getFlashcards().forEach(f->{
+            getEntityById(f.getId()).setIsDelete(1);
+        });
+        studyModule.getQuizzes().forEach(q->{
+            getEntityById(q.getId()).setIsDelete(1);
+        });
+        return ResponseData.builder().build();
     }
 
     /**
