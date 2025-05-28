@@ -33,6 +33,12 @@ public class StudyModuleController {
         return ResponseEntity.ok(ResponseData.builder().data(studyModuleResponse).build());
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseData> updateStudyModule(@PathVariable String id, @Valid @RequestBody StudyModuleRequest studyModuleRequest) {
+        final StudyModuleResponse studyModuleResponse = studyModuleService.update(id,studyModuleRequest);
+        return ResponseEntity.ok(ResponseData.builder().data(studyModuleResponse).build());
+    }
+
     @GetMapping
     public ResponseEntity<ResponseData> getAllStudyModules(
             @RequestParam(value = CoreConstants.QUERY.PAGE, defaultValue = CoreConstants.QUERY.PAGE_DEFAULT) final int page,
@@ -56,7 +62,7 @@ public class StudyModuleController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseData> deleteModule(@PathVariable final String id){
+    public ResponseEntity<ResponseData> deleteModule(@PathVariable final String id) {
         return ResponseEntity.ok(studyModuleService.deleteModule(id));
     }
 }

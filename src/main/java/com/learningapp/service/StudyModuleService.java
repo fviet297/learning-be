@@ -6,6 +6,8 @@ import com.learningapp.dto.response.StudyModuleProjection;
 import com.learningapp.dto.response.StudyModuleResponse;
 import com.learningapp.entity.StudyModule;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -21,6 +23,8 @@ public interface StudyModuleService {
      * @return the created study module response
      */
     StudyModuleResponse create(StudyModuleRequest studyModuleRequest);
+
+    StudyModuleResponse update(@NotBlank String id, @NotNull StudyModuleRequest studyModuleRequest);
 
     /**
      * Retrieves a study module by its ID.

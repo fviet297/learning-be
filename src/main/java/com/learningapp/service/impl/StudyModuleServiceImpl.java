@@ -32,7 +32,7 @@ public class StudyModuleServiceImpl implements StudyModuleService {
      * Constructs a new StudyModuleServiceImpl with required dependencies.
      *
      * @param studyModuleRepository the repository for study module data access
-     * @param studyModuleMapper the mapper for converting between DTOs and entities
+     * @param studyModuleMapper     the mapper for converting between DTOs and entities
      */
     @Autowired
     public StudyModuleServiceImpl(final StudyModuleRepository studyModuleRepository, final StudyModuleMapper studyModuleMapper) {
@@ -54,6 +54,18 @@ public class StudyModuleServiceImpl implements StudyModuleService {
      * {@inheritDoc}
      */
     @Override
+    @Transactional
+    public StudyModuleResponse update(@NotBlank final String id, @NotNull final StudyModuleRequest studyModuleRequest) {
+        StudyModule studyModule = getEntityById(id);
+        studyModule.setName(studyModuleRequest.getName());
+        studyModule.setDescription(studyModuleRequest.getDescription());
+        return studyModuleMapper.toResponse(studyModule);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public StudyModuleResponse getById(@NotBlank final String id) {
         final StudyModule studyModule = this.getEntityById(id);
         return studyModuleMapper.toResponse(studyModule);
@@ -61,13 +73,13 @@ public class StudyModuleServiceImpl implements StudyModuleService {
 
     @Transactional
     @Override
-    public ResponseData deleteModule(final String id){
+    public ResponseData deleteModule(final String id) {
         final StudyModule studyModule = getEntityById(id);
         studyModule.setIsDelete(1);
-        studyModule.getFlashcards().forEach(f->{
+        studyModule.getFlashcards().forEach(f -> {
             f.setIsDelete(1);
         });
-        studyModule.getQuizzes().forEach(q->{
+        studyModule.getQuizzes().forEach(q -> {
             q.setIsDelete(1);
         });
         return ResponseData.builder().build();
