@@ -30,6 +30,12 @@ public class FlashcardController {
         return ResponseEntity.ok(ResponseData.builder().data(flashcardResponse).build());
     }
 
+    @PutMapping
+    public ResponseEntity<ResponseData> updateFlashcard(@Valid @RequestBody FlashcardRequest flashcardRequest){
+        final FlashcardResponse flashcardResponse = flashcardService.update(flashcardRequest);
+        return ResponseEntity.ok(ResponseData.builder().data(flashcardResponse).build());
+    }
+
     @GetMapping("/random/{studyModuleId}")
     public ResponseEntity<ResponseData> getRandomFlashcard(@PathVariable String studyModuleId) {
         final FlashcardResponse flashcardResponse = flashcardService.random(studyModuleId);
