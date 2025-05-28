@@ -2,6 +2,7 @@ package com.learningapp.service.impl;
 
 import com.learningapp.constants.CoreConstants;
 import com.learningapp.dto.ResponseData;
+import com.learningapp.dto.request.FlashcardRequest;
 import com.learningapp.dto.request.FlashcardRequestBulk;
 import com.learningapp.dto.response.FlashcardResponse;
 import com.learningapp.entity.Flashcard;
@@ -51,6 +52,15 @@ public class FlashcardServiceImpl implements FlashcardService {
         flashcards = flashcardRepository.saveAll(flashcards);
 
         return flashcardMapper.toResponse(flashcards);
+    }
+
+    @Override
+    public FlashcardResponse update(@NotNull final FlashcardRequest flashcardRequest){
+        Flashcard flashcard = getEntityById(flashcardRequest.getId());
+        final StudyModule studyModule = flashcard.getStudyModule();
+        flashcard = flashcardMapper.toEntity(flashcardRequest);
+        flashcard.setStudyModule(studyModule);
+        return flashcardMapper.toResponse(flashcardRepository.save(flashcard));
     }
 
     @Override
