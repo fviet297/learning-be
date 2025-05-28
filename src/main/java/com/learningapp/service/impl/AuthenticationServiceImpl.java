@@ -11,11 +11,15 @@ import com.learningapp.exception.BusinessException;
 import com.learningapp.repository.UserRepository;
 import com.learningapp.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 @Service
 @RequiredArgsConstructor
@@ -25,13 +29,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
+    @Value("${salt_key}")
+    private String SALT_KEY;
+
     @Override
     public AuthenticationResponse register(RegisterRequest request) {
         final String username = request.getUsername();
         if (repository.findByUsername(username).isPresent()) {
             throw new BusinessException(CoreConstants.MESSAGE_AUTH.USER_EXISTS);
         }
-        final String password = passwordEncoder.encode(request.getPassword());
+        final String password = passwordEncoder.encode(decryptPassword(request.getPassword()));
         final User user = new User();
         user.setPassword(password);
         user.setEmail(request.getEmail());
@@ -51,7 +58,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             request.getUsername(),
-                            request.getPassword()
+                            decryptPassword(request.getPassword())
                     )
             );
             final User user = repository.findByUsername(request.getUsername())
@@ -63,6 +70,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .build();
         } catch (BadCredentialsException e) {
             throw new BadCredentialsException(CoreConstants.MESSAGE_AUTH.INVALID_CREDENTIALS);
+        }
+    }
+
+    private String decryptPassword(String encodedPassword) {
+        try {
+
+            byte[] decodedBytes = Base64.getDecoder().decode(encodedPassword);
+            String decodedString = new String(decodedBytes, StandardCharsets.UTF_8);
+
+            if (decodedString.endsWith(SALT_KEY)) {
+                return decodedString.substring(0, decodedString.length() - SALT_KEY.length());
+            }
+            return decodedString;
+        } catch (Exception e) {
+            System.err.println("Error decrypting password: " + e.getMessage());
+            return encodedPassword;
         }
     }
 }
