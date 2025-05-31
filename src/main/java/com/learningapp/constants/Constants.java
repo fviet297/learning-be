@@ -29,7 +29,7 @@ public final class Constants {
 
     public interface OPEN_ROUTER {
         String FLASHCARD_COMMAND = " Based on the content of the text above, please help me return 2 flashcards in" +
-                " the following structure: [ { 'question': 'Question', 'answer': 'Answer' }]";
+                " the following structure: [ { 'question': 'Question', 'answer': 'Answer' }]; no yapping";
 
         String QUIZ_COMMAND = """
                  Based on the content of the text above, please help me please help me return 2 quizzes in the following structure:
@@ -41,7 +41,7 @@ public final class Constants {
                     }
                 ]
                 
-                 ;Noticed 'options' is String not Object"
+                 ;Noticed 'options' is String not Object; no yapping"
                 """;
         String USER_ROLE = "user";
     }
