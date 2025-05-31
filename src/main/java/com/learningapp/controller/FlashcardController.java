@@ -30,6 +30,12 @@ public class FlashcardController {
         return ResponseEntity.ok(ResponseData.builder().data(flashcardResponse).build());
     }
 
+    @PostMapping("/gen")
+    public ResponseEntity<ResponseData> createFlashcardsBulkGen(@Valid @RequestBody FlashcardRequestBulk flashcardRequestBulk) {
+        final List<FlashcardResponse> flashcardResponse = flashcardService.createBulkGen(flashcardRequestBulk);
+        return ResponseEntity.ok(ResponseData.builder().data(flashcardResponse).build());
+    }
+
     @PutMapping
     public ResponseEntity<ResponseData> updateFlashcard(@Valid @RequestBody FlashcardRequest flashcardRequest){
         final FlashcardResponse flashcardResponse = flashcardService.update(flashcardRequest);

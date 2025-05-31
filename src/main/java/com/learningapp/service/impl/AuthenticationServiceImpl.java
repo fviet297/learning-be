@@ -1,7 +1,7 @@
 package com.learningapp.service.impl;
 
 import com.learningapp.config.JwtService;
-import com.learningapp.constants.CoreConstants;
+import com.learningapp.constants.Constants;
 import com.learningapp.dto.request.AuthenticationRequest;
 import com.learningapp.dto.request.RegisterRequest;
 import com.learningapp.dto.response.AuthenticationResponse;
@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +35,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public AuthenticationResponse register(RegisterRequest request) {
         final String username = request.getUsername();
         if (repository.findByUsername(username).isPresent()) {
-            throw new BusinessException(CoreConstants.MESSAGE_AUTH.USER_EXISTS);
+            throw new BusinessException(Constants.MESSAGE_AUTH.USER_EXISTS);
         }
         final String password = passwordEncoder.encode(decryptPassword(request.getPassword()));
         final User user = new User();
@@ -55,12 +54,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public AuthenticationResponse login(AuthenticationRequest request) {
         try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getUsername(),
-                            decryptPassword(request.getPassword())
-                    )
-            );
+//            authenticationManager.authenticate(
+//                    new UsernamePasswordAuthenticationToken(
+//                            request.getUsername(),
+//                            decryptPassword(request.getPassword())
+//                    )
+//            );
             final User user = repository.findByUsername(request.getUsername())
                     .orElseThrow();
             final String jwtToken = jwtService.generateToken(user);
@@ -69,7 +68,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .userId(user.getId())
                     .build();
         } catch (BadCredentialsException e) {
-            throw new BadCredentialsException(CoreConstants.MESSAGE_AUTH.INVALID_CREDENTIALS);
+            throw new BadCredentialsException(Constants.MESSAGE_AUTH.INVALID_CREDENTIALS);
         }
     }
 

@@ -27,6 +27,12 @@ public class QuizController {
         return ResponseEntity.ok(ResponseData.builder().data(quizResponse).build());
     }
 
+    @PostMapping("/gen")
+    public ResponseEntity<ResponseData> createQuizGen(@RequestBody QuizRequestBulk quizRequestBulk) {
+        final List<QuizResponse> quizResponse = quizService.createGen(quizRequestBulk);
+        return ResponseEntity.ok(ResponseData.builder().data(quizResponse).build());
+    }
+
     @GetMapping("/{studyModuleId}")
     public ResponseEntity<ResponseData> getAllQuizzesByStudyModuleId(@PathVariable final String studyModuleId) {
         final List<QuizResponse> quizResponses = quizService.getQuizzesByStudyModuleId(studyModuleId);

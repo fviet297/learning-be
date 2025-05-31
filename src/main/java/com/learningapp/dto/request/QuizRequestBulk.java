@@ -16,4 +16,6 @@ public class QuizRequestBulk {
 
     @NotEmpty
     private List<QuizRequest> quizRequests;
+
+    private String content;
 }

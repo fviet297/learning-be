@@ -1,14 +1,18 @@
 package com.learningapp.service.impl;
 
-import com.learningapp.constants.CoreConstants;
+import com.learningapp.constants.Constants;
+import com.learningapp.dto.QuizDTO;
 import com.learningapp.dto.ResponseData;
+import com.learningapp.dto.request.QuizRequest;
 import com.learningapp.dto.request.QuizRequestBulk;
 import com.learningapp.dto.response.QuizResponse;
 import com.learningapp.entity.Quiz;
 import com.learningapp.entity.StudyModule;
+import com.learningapp.enums.CreationEnum;
 import com.learningapp.exception.NotFoundException;
 import com.learningapp.mapper.QuizMapper;
 import com.learningapp.repository.QuizRepository;
+import com.learningapp.service.OpenRouterService;
 import com.learningapp.service.QuizResultService;
 import com.learningapp.service.QuizService;
 import com.learningapp.service.StudyModuleService;
@@ -18,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class QuizServiceImpl implements QuizService {
@@ -25,22 +30,49 @@ public class QuizServiceImpl implements QuizService {
     private final QuizMapper quizMapper;
     private final StudyModuleService studyModuleService;
     private final QuizResultService quizResultService;
+    private final OpenRouterService openRouterService;
 
     @Autowired
     public QuizServiceImpl(final QuizRepository quizRepository,
                            final QuizMapper quizMapper,
                            final StudyModuleService studyModuleService,
-                           QuizResultService quizResultService) {
+                           QuizResultService quizResultService,
+                           final OpenRouterService openRouterService) {
         this.quizRepository = quizRepository;
         this.quizMapper = quizMapper;
         this.studyModuleService = studyModuleService;
         this.quizResultService = quizResultService;
+        this.openRouterService = openRouterService;
     }
 
     @Override
     public List<QuizResponse> create(@NotNull final QuizRequestBulk quizRequestBulk) {
 
         List<Quiz> quizzes = quizMapper.toEntity(quizRequestBulk.getQuizRequests());
+        final StudyModule studyModule = studyModuleService.getEntityById(quizRequestBulk.getStudyModuleId());
+
+        quizzes.forEach(quiz -> {
+                    quiz.setStudyModule(studyModule);
+                }
+        );
+        quizzes = quizRepository.saveAll(quizzes);
+        return quizMapper.toResponses(quizzes);
+    }
+
+    @Override
+    public List<QuizResponse> createGen(@NotNull final QuizRequestBulk quizRequestBulk) {
+
+        final List<Map<String, Object>> generateQuizzes = openRouterService.generate(quizRequestBulk.getContent(), CreationEnum.QUIZZ);
+
+        final List<QuizRequest> quizRequests = generateQuizzes.stream().map(i -> {
+            QuizRequest quizRequest = new QuizRequest();
+            quizRequest.setQuestion((String) i.get(QuizDTO.Fields.question));
+            quizRequest.setOptions((String) i.get(QuizDTO.Fields.options));
+            quizRequest.setCorrectAnswer((Integer) i.get(QuizDTO.Fields.correctAnswer));
+            return quizRequest;
+        }).toList();
+
+        List<Quiz> quizzes = quizMapper.toEntity(quizRequests);
         final StudyModule studyModule = studyModuleService.getEntityById(quizRequestBulk.getStudyModuleId());
 
         quizzes.forEach(quiz -> {
@@ -70,7 +102,7 @@ public class QuizServiceImpl implements QuizService {
         return quizRepository.findByIdAndIsDeleteIsFalse(id).orElseThrow(
                 () -> new NotFoundException(
                         String.format(
-                                CoreConstants.MESSAGE_ERROR.NOT_FOUND_ENTITY,
+                                Constants.MESSAGE_ERROR.NOT_FOUND_ENTITY,
                                 Quiz.class.getSimpleName(),
                                 id
                         )));

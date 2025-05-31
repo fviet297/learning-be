@@ -1,6 +1,6 @@
 package com.learningapp.service.impl;
 
-import com.learningapp.constants.CoreConstants;
+import com.learningapp.constants.Constants;
 import com.learningapp.dto.ResponseData;
 import com.learningapp.dto.request.StudyModuleRequest;
 import com.learningapp.dto.response.StudyModuleProjection;
@@ -95,7 +95,7 @@ public class StudyModuleServiceImpl implements StudyModuleService {
                 .orElseThrow(
                         () -> new NotFoundException(
                                 String.format(
-                                        CoreConstants.MESSAGE_ERROR.NOT_FOUND_ENTITY,
+                                        Constants.MESSAGE_ERROR.NOT_FOUND_ENTITY,
                                         StudyModule.class.getSimpleName(),
                                         id
                                 )));
@@ -109,7 +109,7 @@ public class StudyModuleServiceImpl implements StudyModuleService {
         return studyModuleRepository
                 .findAllStudyModuleEntitiesByIsDeleteFalse(pageable)
                 .orElseThrow(() -> new NotFoundException(String.format(
-                        CoreConstants.MESSAGE_ERROR.NO_DATA,
+                        Constants.MESSAGE_ERROR.NO_DATA,
                         StudyModule.class.getSimpleName()
                 )));
     }

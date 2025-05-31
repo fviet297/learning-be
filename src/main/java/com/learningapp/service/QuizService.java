@@ -13,6 +13,8 @@ import java.util.List;
 public interface QuizService {
     List<QuizResponse> create(@NotNull QuizRequestBulk quizRequestBulk);
 
+    List<QuizResponse> createGen(@NotNull QuizRequestBulk quizRequestBulk);
+
     List<QuizResponse> getQuizzesByStudyModuleId(String studyModuleId);
 
     @Transactional

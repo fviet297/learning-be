@@ -11,4 +11,5 @@ public class QuizRequest extends QuizDTO {
 
     @NotBlank
     private String studyModuleId;
-} 
+
+}

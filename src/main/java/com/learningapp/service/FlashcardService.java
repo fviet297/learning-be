@@ -16,6 +16,8 @@ public interface FlashcardService {
 
     List<FlashcardResponse> createBulk(@NotNull FlashcardRequestBulk flashcardRequestBulk);
 
+    List<FlashcardResponse> createBulkGen(@NotNull FlashcardRequestBulk flashcardRequestBulk);
+
     FlashcardResponse update(@NotNull FlashcardRequest flashcardRequest);
 
     FlashcardResponse random(@NotNull String studyModuleId);

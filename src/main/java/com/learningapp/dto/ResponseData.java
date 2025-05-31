@@ -1,7 +1,7 @@
 package com.learningapp.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.learningapp.constants.CoreConstants;
+import com.learningapp.constants.Constants;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -52,7 +52,7 @@ public class ResponseData {
      */
     public String getStatus() {
         return (CollectionUtils.isEmpty(errorDetails))
-                ? CoreConstants.RESPONSE_STATUS.SUCCESS
-                : CoreConstants.RESPONSE_STATUS.ERROR;
+                ? Constants.RESPONSE_STATUS.SUCCESS
+                : Constants.RESPONSE_STATUS.ERROR;
     }
 }

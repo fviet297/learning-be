@@ -1,6 +1,6 @@
 package com.learningapp.controller;
 
-import com.learningapp.constants.CoreConstants;
+import com.learningapp.constants.Constants;
 import com.learningapp.dto.PageCustom;
 import com.learningapp.dto.ResponseData;
 import com.learningapp.dto.request.StudyModuleRequest;
@@ -41,9 +41,9 @@ public class StudyModuleController {
 
     @GetMapping
     public ResponseEntity<ResponseData> getAllStudyModules(
-            @RequestParam(value = CoreConstants.QUERY.PAGE, defaultValue = CoreConstants.QUERY.PAGE_DEFAULT) final int page,
-            @RequestParam(value = CoreConstants.QUERY.SIZE, defaultValue = CoreConstants.QUERY.SIZE_DEFAULT) final int size,
-            @RequestParam(value = CoreConstants.QUERY.SORT, defaultValue = CoreConstants.QUERY.UPDATE_ORDER) final String sort
+            @RequestParam(value = Constants.QUERY.PAGE, defaultValue = Constants.QUERY.PAGE_DEFAULT) final int page,
+            @RequestParam(value = Constants.QUERY.SIZE, defaultValue = Constants.QUERY.SIZE_DEFAULT) final int size,
+            @RequestParam(value = Constants.QUERY.SORT, defaultValue = Constants.QUERY.UPDATE_ORDER) final String sort
     ) {
         final Pageable pageable = PageRequest.of(page, size, Sort.by(sort).descending());
         final Page<StudyModuleProjection> pageStudyModules = studyModuleService.getPageStudyModules(pageable);

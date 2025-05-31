@@ -16,4 +16,6 @@ public class FlashcardRequestBulk {
 
     @NotEmpty
     private List<FlashcardRequest> flashcardRequests;
+
+    private String content;
 }
