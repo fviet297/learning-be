@@ -75,7 +75,7 @@ public class OpenRouterServiceImpl implements OpenRouterService {
             return new ArrayList<>();
         } catch (Exception e) {
             e.printStackTrace();
-            throw new BusinessException("Error generating : " + e.getMessage());
+            throw new BusinessException("Error generating.");
         }
     }
 
