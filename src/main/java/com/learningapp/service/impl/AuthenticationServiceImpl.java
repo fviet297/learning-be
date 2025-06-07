@@ -9,6 +9,7 @@ import com.learningapp.entity.User;
 import com.learningapp.enums.Role;
 import com.learningapp.exception.BusinessException;
 import com.learningapp.repository.UserRepository;
+import com.learningapp.security.CustomUserDetails;
 import com.learningapp.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,7 +46,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setUsername(username);
         user.setFullName(request.getFullName());
 
-        final String jwt = jwtService.generateToken(user);
+        final String jwt = jwtService.generateToken(new CustomUserDetails(user));
 
         repository.save(user);
         return AuthenticationResponse.builder().token(jwt).userId(user.getId()).build();
@@ -62,7 +63,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 //            );
             final User user = repository.findByUsername(request.getUsername())
                     .orElseThrow();
-            final String jwtToken = jwtService.generateToken(user);
+            final String jwtToken = jwtService.generateToken(new CustomUserDetails(user));
             return AuthenticationResponse.builder()
                     .token(jwtToken)
                     .userId(user.getId())

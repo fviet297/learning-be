@@ -12,6 +12,9 @@ import java.util.List;
 @Setter
 public class StudyModule extends BaseEntity{
 
+    @Column(name = "userId", nullable = false)
+    private String userId;
+
     @Column(name = "name", nullable = false)
     private String name;
 

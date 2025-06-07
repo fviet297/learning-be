@@ -1,5 +1,6 @@
 package com.learningapp.service.impl;
 
+import com.learningapp.common.CommonUtils;
 import com.learningapp.constants.Constants;
 import com.learningapp.dto.ResponseData;
 import com.learningapp.dto.request.StudyModuleRequest;
@@ -46,6 +47,7 @@ public class StudyModuleServiceImpl implements StudyModuleService {
     @Override
     public StudyModuleResponse create(@NotNull final StudyModuleRequest studyModuleRequest) {
         StudyModule studyModule = studyModuleMapper.toEntity(studyModuleRequest);
+        studyModule.setUserId(CommonUtils.getCurrentUserId());
         studyModule = studyModuleRepository.save(studyModule);
         return studyModuleMapper.toResponse(studyModule);
     }
@@ -106,8 +108,9 @@ public class StudyModuleServiceImpl implements StudyModuleService {
      */
     @Override
     public Page<StudyModuleProjection> getPageStudyModules(final Pageable pageable) {
+        final String userId = CommonUtils.getCurrentUserId();
         return studyModuleRepository
-                .findAllStudyModuleEntitiesByIsDeleteFalse(pageable)
+                .findAllStudyModuleEntitiesByUserIdAndIsDeleteFalse(userId, pageable)
                 .orElseThrow(() -> new NotFoundException(String.format(
                         Constants.MESSAGE_ERROR.NO_DATA,
                         StudyModule.class.getSimpleName()

@@ -1,5 +1,6 @@
 package com.learningapp.config;
 
+import com.learningapp.security.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -40,7 +41,7 @@ public class JwtService {
         return Jwts.parser().setSigningKey(getSignInKey()).parseClaimsJws(token).getBody();
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(CustomUserDetails userDetails) {
         return generateToken(new HashMap<String, Object>(), userDetails);
     }
 

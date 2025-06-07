@@ -28,5 +28,5 @@ public interface StudyModuleRepository extends JpaRepository<StudyModule, String
      * @param pageable the pagination information
      * @return an Optional containing a page of study module projections
      */
-    Optional<Page<StudyModuleProjection>> findAllStudyModuleEntitiesByIsDeleteFalse(Pageable pageable);
+    Optional<Page<StudyModuleProjection>> findAllStudyModuleEntitiesByUserIdAndIsDeleteFalse(String userId, Pageable pageable);
 }
