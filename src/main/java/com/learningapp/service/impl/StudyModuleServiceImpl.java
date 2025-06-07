@@ -77,12 +77,12 @@ public class StudyModuleServiceImpl implements StudyModuleService {
     @Override
     public ResponseData deleteModule(final String id) {
         final StudyModule studyModule = getEntityById(id);
-        studyModule.setIsDelete(1);
+        studyModule.setIsDelete(true);
         studyModule.getFlashcards().forEach(f -> {
-            f.setIsDelete(1);
+            f.setIsDelete(true);
         });
         studyModule.getQuizzes().forEach(q -> {
-            q.setIsDelete(1);
+            q.setIsDelete(true);
         });
         return ResponseData.builder().build();
     }

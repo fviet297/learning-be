@@ -117,7 +117,7 @@ public class FlashcardServiceImpl implements FlashcardService {
     @Transactional
     public ResponseData deleteFlashcard(final String id) {
         Flashcard flashcard = getEntityById(id);
-        flashcard.setIsDelete(1);
+        flashcard.setIsDelete(true);
         return ResponseData.builder().build();
     }
 

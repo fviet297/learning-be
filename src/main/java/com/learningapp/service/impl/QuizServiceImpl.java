@@ -93,7 +93,7 @@ public class QuizServiceImpl implements QuizService {
     @Override
     public ResponseData deleteQuiz(final String id) {
         final Quiz quiz = getEntityById(id);
-        quiz.setIsDelete(1);
+        quiz.setIsDelete(true);
         return ResponseData.builder().build();
     }
 

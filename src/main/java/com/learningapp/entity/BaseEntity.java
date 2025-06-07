@@ -51,7 +51,7 @@ public abstract class BaseEntity {
      * Flag indicating whether the entity is deleted (0 = not deleted, 1 = deleted)
      */
     @Column(name = "is_delete", nullable = false)
-    private Integer isDelete = 0;
+    private Boolean isDelete = true;
 
     /**
      * Generates a UUID for the entity if one is not already set
