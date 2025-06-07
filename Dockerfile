@@ -10,9 +10,9 @@ FROM openjdk:17-slim
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
-# Set environment variables
-ENV SPRING_PROFILES_ACTIVE=prod
-ENV TZ=Asia/Ho_Chi_Minh
+# # Set environment variables
+# ENV SPRING_PROFILES_ACTIVE=prod
+# ENV TZ=Asia/Ho_Chi_Minh
 
 # Expose the application port
 EXPOSE 8080
