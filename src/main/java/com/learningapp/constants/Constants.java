@@ -29,7 +29,7 @@ public final class Constants {
 
     public interface OPEN_ROUTER {
         String FLASHCARD_COMMAND = """
-                 Based on the content of the text above, please help me return 20 flashcards in 
+                 Based on the content of the text above, please help me return 5 flashcards in 
                 the following structure: 
                 [
                     {
@@ -41,7 +41,7 @@ public final class Constants {
                 """;
 
         String QUIZ_COMMAND = """
-                 Based on the content of the text above, please help me please help me return 20 quizzes in the following structure:
+                 Based on the content of the text above, please help me please help me return 5 quizzes in the following structure,correct answer is random:
                 [
                     {
                         "question": "Questions ?",
