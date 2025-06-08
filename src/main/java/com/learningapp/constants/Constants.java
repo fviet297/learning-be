@@ -37,7 +37,7 @@ public final class Constants {
                         "answer": "Answer"
                      }
                 ]
-                ; no yapping
+                ; no yapping;only vietnamese
                 """;
 
         String QUIZ_COMMAND = """
@@ -50,7 +50,7 @@ public final class Constants {
                     }
                 ]
                 
-                 ;Noticed "options" is String not Object; no yapping"
+                 ;Noticed "options" is String not Object; no yapping;only vietnamese"
                 """;
         String USER_ROLE = "user";
     }
