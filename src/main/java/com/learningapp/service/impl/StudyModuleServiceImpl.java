@@ -10,6 +10,7 @@ import com.learningapp.entity.StudyModule;
 import com.learningapp.exception.NotFoundException;
 import com.learningapp.mapper.StudyModuleMapper;
 import com.learningapp.repository.StudyModuleRepository;
+import com.learningapp.service.GoogleSheetsService;
 import com.learningapp.service.StudyModuleService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotBlank;
@@ -18,6 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Implementation of the StudyModuleService interface.
@@ -28,6 +32,7 @@ public class StudyModuleServiceImpl implements StudyModuleService {
 
     private final StudyModuleRepository studyModuleRepository;
     private final StudyModuleMapper studyModuleMapper;
+    private final GoogleSheetsService googleSheetsService;
 
     /**
      * Constructs a new StudyModuleServiceImpl with required dependencies.
@@ -36,9 +41,10 @@ public class StudyModuleServiceImpl implements StudyModuleService {
      * @param studyModuleMapper     the mapper for converting between DTOs and entities
      */
     @Autowired
-    public StudyModuleServiceImpl(final StudyModuleRepository studyModuleRepository, final StudyModuleMapper studyModuleMapper) {
+    public StudyModuleServiceImpl(final GoogleSheetsService googleSheetsService,final StudyModuleRepository studyModuleRepository, final StudyModuleMapper studyModuleMapper) {
         this.studyModuleRepository = studyModuleRepository;
         this.studyModuleMapper = studyModuleMapper;
+        this.googleSheetsService=googleSheetsService;
     }
 
     /**
@@ -115,5 +121,10 @@ public class StudyModuleServiceImpl implements StudyModuleService {
                         Constants.MESSAGE_ERROR.NO_DATA,
                         StudyModule.class.getSimpleName()
                 )));
+    }
+
+    @Override
+    public List<StudyModule> getAllGGSheet() throws IOException {
+        return googleSheetsService.getAllStudyModules();
     }
 }

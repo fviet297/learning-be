@@ -11,6 +11,9 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.io.IOException;
+import java.util.List;
+
 /**
  * Service interface for managing study modules in the learning application.
  * This interface defines the contract for study module-related operations.
@@ -52,4 +55,6 @@ public interface StudyModuleService {
      * @return a page of study module projections
      */
     Page<StudyModuleProjection> getPageStudyModules(final Pageable pageable);
+
+    List<StudyModule> getAllGGSheet() throws IOException;
 }

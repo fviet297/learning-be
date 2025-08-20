@@ -16,6 +16,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/study-modules")
 public class StudyModuleController {
@@ -53,6 +55,11 @@ public class StudyModuleController {
         }
         final PageCustom<StudyModuleProjection> pageCustom = PageCustom.from(pageStudyModules);
         return ResponseEntity.ok(ResponseData.builder().data(pageCustom).build());
+    }
+
+    @GetMapping("/sheets")
+    public ResponseEntity<ResponseData> getAllStudyModulesGGSheet() throws IOException {
+        return ResponseEntity.ok(ResponseData.builder().data(studyModuleService.getAllGGSheet()).build());
     }
 
     @GetMapping("/{id}")
