@@ -125,6 +125,17 @@ public class StudyModuleServiceImpl implements StudyModuleService {
 
     @Override
     public List<StudyModule> getAllGGSheet() throws IOException {
-        return googleSheetsService.getAllStudyModules();
+        Class<StudyModule> studyModuleClass = StudyModule.class;
+        return googleSheetsService.getAllRecords(
+                Constants.TABLE.STUDY_MODULES,
+                row -> {
+                    StudyModule module = new StudyModule();
+                    module.setId(row.get(0).toString());
+                    module.setUserId(row.get(1).toString());
+                    module.setName(row.get(2).toString());
+                    module.setDescription(row.size() > 3 ? row.get(3).toString() : null);
+                    return module;
+                }
+        );
     }
 }

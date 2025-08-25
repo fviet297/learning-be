@@ -12,6 +12,13 @@ public final class Constants {
         String NO_DATA = "The list of %s has no data";
     }
 
+    public interface TABLE {
+        String USERS = "users";
+        String STUDY_MODULES = "study_modules";
+        String FLASHCARDS = "flashcards";
+        String QUIZZES = "quizzes";
+    }
+
     public interface MESSAGE_AUTH {
         String NOT_FOUND = "User not found";
         String USER_EXISTS = "Username already exists";
