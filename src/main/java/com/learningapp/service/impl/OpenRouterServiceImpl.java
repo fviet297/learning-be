@@ -2,6 +2,7 @@ package com.learningapp.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.learningapp.constants.Constants;
+import com.learningapp.dto.APIResponseContent;
 import com.learningapp.dto.request.MessageRequest;
 import com.learningapp.dto.request.OpenRouterRequest;
 import com.learningapp.dto.response.ChatCompletionResponse;
@@ -60,6 +61,7 @@ public class OpenRouterServiceImpl implements OpenRouterService {
                     ChatCompletionResponse.class
             );
 
+            LOG.info(response.toString());
             // Extract and parse the response
             if (response != null && response.getChoices() != null) {
                 final List<Choice> choices = response.getChoices();
@@ -67,8 +69,11 @@ public class OpenRouterServiceImpl implements OpenRouterService {
                     final Choice firstChoice = choices.get(0);
                     final MessageResponse messageContent = firstChoice.getMessage();
                     final String content = messageContent.getContent();
+                    APIResponseContent apiResponseContent = objectMapper.readValue(content, APIResponseContent.class);
                     // Parse the JSON string from the content
-                    return objectMapper.readValue(content, List.class);
+                    return creationEnum.getType().equals(CreationEnum.FLASHCARD.getType())
+                            ? apiResponseContent.getFlashcards()
+                            : apiResponseContent.getQuizzes();
                 }
             }
 
@@ -88,7 +93,7 @@ public class OpenRouterServiceImpl implements OpenRouterService {
         final List<MessageRequest> messages = new ArrayList<>();
         messages.add(message);
 
-        final OpenRouterRequest requestBody = new OpenRouterRequest(MODEL, messages);
+        final OpenRouterRequest requestBody = new OpenRouterRequest(MODEL, messages, Map.of("type", "json_object"));
         return requestBody;
     }
 
