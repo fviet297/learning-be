@@ -30,9 +30,14 @@ public final class Constants {
     public interface OPEN_ROUTER {
         String FLASHCARD_COMMAND = """
                  Based on the content of the text above, please help me return 20 flashcards in 
-                the following structure: 
+                the following structure be low example: 
                 [
                     {
+                        "question": "Question",
+                        "answer": "Answer"
+                     }
+                     ,
+                                         {
                         "question": "Question",
                         "answer": "Answer"
                      }
@@ -47,10 +52,15 @@ public final class Constants {
                         "question": "Questions ?",
                         "options": "[\\"options1\\",\\"options2\\",\\"options3\\",\\"options4\\"]",
                         "correctAnswer": 0 //1,2,3\s
+                    },
+                                        {
+                        "question": "Questions ?",
+                        "options": "[\\"options1\\",\\"options2\\",\\"options3\\",\\"options4\\"]",
+                        "correctAnswer": 0 //1,2,3\s
                     }
                 ]
                 
-                 ;Noticed "options" is String not Object; no yapping;only vietnamese; Chỉ trả lời nội dung Json Mảng không thêm gì khác"
+                 ;Noticed "options" is String not Object; no yapping;only vietnamese; response with json format"
                 """;
         String USER_ROLE = "user";
     }

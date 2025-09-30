@@ -56,7 +56,9 @@ public class SecurityConfig {
                 Arrays.asList(
                         "http://localhost:3000",
                         "https://learning-fe.onrender.com/",
-                        "https://learning-fe-app.windsurf.build/"
+                        "https://learning-fe-app.windsurf.build/",
+                        "https://neutral-assisted-hostels-contribute.trycloudflare.com/",
+                        "https://learning-fe-kappa.vercel.app/"
                 ));
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
