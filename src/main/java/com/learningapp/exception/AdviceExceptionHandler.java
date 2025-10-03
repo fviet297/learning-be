@@ -24,6 +24,7 @@ public class AdviceExceptionHandler {
     public ResponseEntity<ResponseData> handleSystemException(final Exception ex) {
 
         log.error("Internal Server Error occurred", ex);
+        ex.printStackTrace();
         final ErrorDetail errorDetail = ErrorDetail.builder().errorCode("SYSTEM_ERROR").message("Internal Server Error").build();
 
         final ResponseData responseData = ResponseData.builder().errorDetails(Collections.singletonList(errorDetail)).build();

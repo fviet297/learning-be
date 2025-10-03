@@ -1,7 +1,6 @@
 package com.learningapp.service.impl;
 
 import com.learningapp.constants.Constants;
-import com.learningapp.dto.FlashcardDTO;
 import com.learningapp.dto.ResponseData;
 import com.learningapp.dto.request.FlashcardRequest;
 import com.learningapp.dto.request.FlashcardRequestBulk;
@@ -22,7 +21,8 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.Random;
 
 @Service
 public class FlashcardServiceImpl implements FlashcardService {
@@ -62,15 +62,9 @@ public class FlashcardServiceImpl implements FlashcardService {
     @Override
     public List<FlashcardResponse> createBulkGen(@NotNull final FlashcardRequestBulk flashcardRequestBulk) {
 
-        final List<Map<String, Object>> generateFlashcards = openRouterService.generate(flashcardRequestBulk.getContent(), CreationEnum.FLASHCARD);
-        final List<FlashcardRequest> flashcardRequests = generateFlashcards.stream().map(i -> {
-            FlashcardRequest flashcardRequest = new FlashcardRequest();
-            flashcardRequest.setAnswer((String) i.get(FlashcardDTO.Fields.answer));
-            flashcardRequest.setQuestion((String) i.get(FlashcardDTO.Fields.question));
-            return flashcardRequest;
-        }).toList();
+        final FlashcardRequest generateFlashcards = openRouterService.generate(flashcardRequestBulk.getContent(), CreationEnum.FLASHCARD);
 
-        List<Flashcard> flashcards = flashcardMapper.toEntity(flashcardRequests);
+        List<Flashcard> flashcards = flashcardMapper.toEntity(List.of(generateFlashcards));
 
         final StudyModule studyModule = studyModuleService.getEntityById(flashcardRequestBulk.getStudyModuleId());
 
