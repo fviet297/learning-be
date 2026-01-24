@@ -8,6 +8,17 @@ services:
         condition: service_healthy
     env_file:
       - .env
+    environment:
+      - POSTGRES_URL=${POSTGRES_URL}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - DDL_AUTO=${DDL_AUTO}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRED=${JWT_EXPIRED}
+      - SALT_KEY=${SALT_KEY}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - OPENROUTER_API_URL=${OPENROUTER_API_URL}
+      - OPENROUTER_API_MODEL=${OPENROUTER_API_MODEL}
     networks:
       - abc
 
