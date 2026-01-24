@@ -10,7 +10,7 @@ import org.hibernate.annotations.Where;
 @Table(name = "flashcards")
 @Getter
 @Setter
-@Where(clause = "is_delete = '0'")
+@Where(clause = "is_delete = false")
 public class Flashcard extends BaseEntity {
 
     @Column(name = "question", nullable = false, columnDefinition = "TEXT")

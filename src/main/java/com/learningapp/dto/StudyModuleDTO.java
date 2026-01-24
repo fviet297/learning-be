@@ -22,4 +22,6 @@ public class StudyModuleDTO implements Serializable {
 
     @NotBlank
     private String name;
+
+    private String content;
 }

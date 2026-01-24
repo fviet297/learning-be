@@ -6,6 +6,7 @@ import com.learningapp.dto.ResponseData;
 import com.learningapp.dto.request.StudyModuleRequest;
 import com.learningapp.dto.response.StudyModuleProjection;
 import com.learningapp.dto.response.StudyModuleResponse;
+import com.learningapp.service.GenerationService;
 import com.learningapp.service.StudyModuleService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +23,13 @@ public class StudyModuleController {
 
     private final StudyModuleService studyModuleService;
 
+    private final GenerationService generationService;
+
     @Autowired
-    public StudyModuleController(StudyModuleService studyModuleService) {
+    public StudyModuleController(StudyModuleService studyModuleService,
+                                 GenerationService generationService) {
         this.studyModuleService = studyModuleService;
+        this.generationService = generationService;
     }
 
     @PostMapping
@@ -65,4 +70,14 @@ public class StudyModuleController {
     public ResponseEntity<ResponseData> deleteModule(@PathVariable final String id) {
         return ResponseEntity.ok(studyModuleService.deleteModule(id));
     }
+
+    @PostMapping("/combine")
+    public ResponseEntity<ResponseData> createCombine(@RequestBody StudyModuleRequest studyModuleRequest) {
+        return ResponseEntity.ok(
+                ResponseData.builder()
+                        .data(generationService.generateAndSave(studyModuleRequest))
+                        .build()
+        );
+    }
+
 }

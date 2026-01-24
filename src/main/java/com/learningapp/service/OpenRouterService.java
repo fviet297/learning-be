@@ -1,8 +1,7 @@
 package com.learningapp.service;
 
-import com.learningapp.dto.request.FlashcardRequest;
-import com.learningapp.enums.CreationEnum;
+import com.learningapp.dto.APIResponseContent;
 
 public interface OpenRouterService {
-    FlashcardRequest generate(String content, CreationEnum creationEnum);
+    APIResponseContent generate(String content);
 }

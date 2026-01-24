@@ -2,6 +2,7 @@ package com.learningapp.service.impl;
 
 import com.learningapp.constants.Constants;
 import com.learningapp.dto.ResponseData;
+import com.learningapp.dto.request.QuizRequest;
 import com.learningapp.dto.request.QuizRequestBulk;
 import com.learningapp.dto.response.QuizResponse;
 import com.learningapp.entity.Quiz;
@@ -58,26 +59,17 @@ public class QuizServiceImpl implements QuizService {
     @Override
     public List<QuizResponse> createGen(@NotNull final QuizRequestBulk quizRequestBulk) {
 
-//        final List<Map<String, Object>> generateQuizzes = openRouterService.generate(quizRequestBulk.getContent(), CreationEnum.QUIZZ);
-//
-//        final List<QuizRequest> quizRequests = generateQuizzes.stream().map(i -> {
-//            QuizRequest quizRequest = new QuizRequest();
-//            quizRequest.setQuestion((String) i.get(QuizDTO.Fields.question));
-//            quizRequest.setOptions((String) i.get(QuizDTO.Fields.options));
-//            quizRequest.setCorrectAnswer((Integer) i.get(QuizDTO.Fields.correctAnswer));
-//            return quizRequest;
-//        }).toList();
-//
-//        List<Quiz> quizzes = quizMapper.toEntity(quizRequests);
-//        final StudyModule studyModule = studyModuleService.getEntityById(quizRequestBulk.getStudyModuleId());
-//
-//        quizzes.forEach(quiz -> {
-//                    quiz.setStudyModule(studyModule);
-//                }
-//        );
-//        quizzes = quizRepository.saveAll(quizzes);
-//        return quizMapper.toResponses(quizzes);
-        return null;
+        final List<QuizRequest> generateQuizzes = openRouterService.generate(quizRequestBulk.getContent()).quizRequestList();
+
+        List<Quiz> quizzes = quizMapper.toEntity(generateQuizzes);
+        final StudyModule studyModule = studyModuleService.getEntityById(quizRequestBulk.getStudyModuleId());
+
+        quizzes.forEach(quiz -> {
+                    quiz.setStudyModule(studyModule);
+                }
+        );
+        quizzes = quizRepository.saveAll(quizzes);
+        return quizMapper.toResponses(quizzes);
     }
 
     @Override

@@ -29,40 +29,42 @@ public final class Constants {
 
     public interface OPEN_ROUTER {
         String FLASHCARD_COMMAND = """
-                 Based on the content of the text above, please help me return 20 flashcards in 
-                the following structure be low example: 
-                [
-                    {
-                        "question": "Question",
-                        "answer": "Answer"
-                     }
-                     ,
-                                         {
-                        "question": "Question",
-                        "answer": "Answer"
-                     }
-                ]
-                ; no yapping; response with json format
-                """;
+                 Dựa trên nội dung văn bản cung cấp, hãy giúp tôi tạo 10 flashcards.
+                 Trả về kết quả tuân thủ nghiêm ngặt định dạng JSON sau:
+                 [
+                     {
+                         "question": "Câu hỏi",
+                         "answer": "Câu trả lời"
+                      }
+                 ]
+                 Không giải thích thêm, chỉ trả về JSON bằng Tiếng Việt.
+                 """;
 
         String QUIZ_COMMAND = """
-                 Based on the content of the text above, please help me please help me return 20 quizzes in the following structure,correct answer is random:
-                [
-                    {
-                        "question": "Questions ?",
-                        "options": "[\\"options1\\",\\"options2\\",\\"options3\\",\\"options4\\"]",
-                        "correctAnswer": 0 //1,2,3\s
-                    },
-                                        {
-                        "question": "Questions ?",
-                        "options": "[\\"options1\\",\\"options2\\",\\"options3\\",\\"options4\\"]",
-                        "correctAnswer": 0 //1,2,3\s
-                    }
-                ]
-                
-                 ;Noticed "options" is String not Object; no yapping;only vietnamese; response with json format"
-                """;
-        String USER_ROLE = "user";
-    }
+                 Dựa trên nội dung văn bản cung cấp, hãy giúp tôi tạo 10 câu hỏi trắc nghiệm (quiz).
+                 Mỗi câu hỏi phải có 4 lựa chọn (options). 
+                 Trả về kết quả tuân thủ nghiêm ngặt định dạng JSON sau:
+                 [
+                     {
+                         "question": "Nội dung câu hỏi?",
+                         "options": ["Lựa chọn 1", "Lựa chọn 2", "Lựa chọn 3", "Lựa chọn 4"],
+                         "correctAnswer": 0 // Chỉ số của câu trả lời đúng (0-3)
+                     }
+                 ]
+                 Lưu ý: "options" là một mảng chuỗi (JSON Array). Không giải thích thêm, chỉ trả về JSON bằng Tiếng Việt.
+                 """;
 
-}
+        String COMBINED_COMMAND = """
+            Nội dung: {command}
+            Dựa trên nội dung trên, hãy tạo chính xác 10 flashcards và 10 câu hỏi trắc nghiệm.
+            Yêu cầu:
+            - Ngôn ngữ: Tiếng Việt.
+            - Định dạng: JSON nguyên bản.
+            - "options" trong quiz phải là mảng của 4 chuỗi.
+            
+            Trả về kết quả tuân thủ nghiêm ngặt cấu trúc sau:
+            {format}
+            """;
+
+    }
+    }

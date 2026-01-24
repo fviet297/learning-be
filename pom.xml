@@ -20,6 +20,7 @@
         <jjwt.version>0.11.5</jjwt.version>
         <mapstruct.version>1.6.0</mapstruct.version>
         <spring-ai.version>1.0.0-M6</spring-ai.version>
+        <postgresql.version>42.7.4</postgresql.version>
     </properties>
 
     <repositories>
@@ -50,13 +51,10 @@
         </dependency>
 
         <!-- Database -->
-<!--        <dependency>-->
-<!--            <groupId>mysql</groupId>-->
-<!--            <artifactId>mysql-connector-java</artifactId>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
+            <version>42.7.4</version>
         </dependency>
 
         <!-- Utils -->

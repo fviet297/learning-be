@@ -5,7 +5,9 @@ import com.learningapp.constants.Constants;
 public enum CreationEnum {
 
     FLASHCARD("FLASHCARD", Constants.OPEN_ROUTER.FLASHCARD_COMMAND),
-    QUIZZ("QUIZZ", Constants.OPEN_ROUTER.QUIZ_COMMAND);
+    QUIZZ("QUIZZ", Constants.OPEN_ROUTER.QUIZ_COMMAND),
+    COMBINED("COMBINED", Constants.OPEN_ROUTER.COMBINED_COMMAND);
+
 
     private String type;
     private String command;

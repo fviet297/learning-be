@@ -7,7 +7,6 @@ import com.learningapp.dto.request.FlashcardRequestBulk;
 import com.learningapp.dto.response.FlashcardResponse;
 import com.learningapp.entity.Flashcard;
 import com.learningapp.entity.StudyModule;
-import com.learningapp.enums.CreationEnum;
 import com.learningapp.enums.FlashcardStatus;
 import com.learningapp.exception.NotFoundException;
 import com.learningapp.mapper.FlashcardMapper;
@@ -62,9 +61,9 @@ public class FlashcardServiceImpl implements FlashcardService {
     @Override
     public List<FlashcardResponse> createBulkGen(@NotNull final FlashcardRequestBulk flashcardRequestBulk) {
 
-        final FlashcardRequest generateFlashcards = openRouterService.generate(flashcardRequestBulk.getContent(), CreationEnum.FLASHCARD);
+        final List<FlashcardRequest> generateFlashcards = openRouterService.generate(flashcardRequestBulk.getContent()).flashcardRequestList();
 
-        List<Flashcard> flashcards = flashcardMapper.toEntity(List.of(generateFlashcards));
+        List<Flashcard> flashcards = flashcardMapper.toEntity(generateFlashcards);
 
         final StudyModule studyModule = studyModuleService.getEntityById(flashcardRequestBulk.getStudyModuleId());
 

@@ -9,6 +9,8 @@ import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,9 +25,9 @@ public class QuizDTO {
     private String question;
 
     @NotBlank
-    private String options; // JSON array of 4 options
+    private List<String> options; // JSON array of 4 options
 
-    @Min(value = 1)
+    @Min(value = 0)
     private int correctAnswer; // 0-3 index of correct option
 
 }
