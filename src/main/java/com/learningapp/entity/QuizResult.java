@@ -1,25 +1,22 @@
 package com.learningapp.entity;
 
-import lombok.*;
-
-import javax.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "quiz_results")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class QuizResult {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class QuizResult extends BaseEntity{
 
     @Column(name = "user_id", nullable = false)
-    private Long userId;
+    private String userId;
 
-    @Column(name = "quiz_id", nullable = false)
-    private Long quizId;
+    @Column(name = "study_module_id", nullable = false)
+    private String studyModuleId;
 
     @Column(name = "score", nullable = false)
     private int score;

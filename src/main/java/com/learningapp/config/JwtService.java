@@ -1,12 +1,13 @@
 package com.learningapp.config;
 
+import com.learningapp.security.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,8 +17,11 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY = "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
-    private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 24; // 24 hours
+    @Value("${jwt.secret}")
+    private String SECRET_KEY;
+
+    @Value("${jwt.expired}")
+    private long EXPIRATION_TIME;
 
     public String extractUsername(String token) {
         return extractClaim(token, new Function<Claims, String>() {
@@ -34,13 +38,10 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(getSignInKey())
-                .parseClaimsJws(token)
-                .getBody();
+        return Jwts.parser().setSigningKey(getSignInKey()).parseClaimsJws(token).getBody();
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(CustomUserDetails userDetails) {
         return generateToken(new HashMap<String, Object>(), userDetails);
     }
 

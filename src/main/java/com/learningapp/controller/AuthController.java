@@ -1,86 +1,42 @@
 package com.learningapp.controller;
 
-import com.learningapp.entity.User;
-import com.learningapp.repository.UserRepository;
-import com.learningapp.config.JwtService;
+import com.learningapp.dto.ResponseData;
+import com.learningapp.dto.request.AuthenticationRequest;
+import com.learningapp.dto.request.RegisterRequest;
+import com.learningapp.dto.response.AuthenticationResponse;
+import com.learningapp.service.AuthenticationService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
-    private final AuthenticationManager authenticationManager;
+    private final AuthenticationService authenticationService;
 
     @Autowired
-    public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder,
-                          JwtService jwtService, AuthenticationManager authenticationManager) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtService = jwtService;
-        this.authenticationManager = authenticationManager;
+    public AuthController(final AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody User user) {
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            return ResponseEntity.badRequest().body("Username already exists");
-        }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-        String jwt = jwtService.generateToken(
-                org.springframework.security.core.userdetails.User
-                        .withUsername(user.getUsername())
-                        .password(user.getPassword())
-                        .authorities("USER")
-                        .build()
-        );
-        return ResponseEntity.ok(new AuthResponse(jwt, user.getId()));
+    public ResponseEntity<ResponseData> register(
+            @Valid @RequestBody RegisterRequest request
+    ) {
+        final AuthenticationResponse authenticationResponse = authenticationService.register(request);
+        return ResponseEntity.ok(ResponseData.builder().data(authenticationResponse).build());
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user) {
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
-            );
-            User foundUser = userRepository.findByUsername(user.getUsername())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
-            String jwt = jwtService.generateToken(
-                    org.springframework.security.core.userdetails.User
-                            .withUsername(foundUser.getUsername())
-                            .password(foundUser.getPassword())
-                            .authorities("USER")
-                            .build()
-            );
-            return ResponseEntity.ok(new AuthResponse(jwt, foundUser.getId()));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Invalid credentials");
-        }
-    }
-
-    private static class AuthResponse {
-        private final String token;
-        private final Long userId;
-
-        public AuthResponse(String token, Long userId) {
-            this.token = token;
-            this.userId = userId;
-        }
-
-        public String getToken() {
-            return token;
-        }
-
-        public Long getUserId() {
-            return userId;
-        }
+    public ResponseEntity<ResponseData> authenticate(
+            @RequestBody AuthenticationRequest request
+    ) {
+        final AuthenticationResponse authenticationResponse = authenticationService.login(request);
+        return ResponseEntity.ok(ResponseData.builder().data(authenticationResponse).build());
     }
 }

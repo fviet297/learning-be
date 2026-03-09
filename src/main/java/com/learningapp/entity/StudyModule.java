@@ -1,19 +1,19 @@
 package com.learningapp.entity;
 
-import javax.persistence.*;
-import lombok.*;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
 @Entity
 @Table(name = "study_modules")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class StudyModule {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class StudyModule extends BaseEntity{
+
+    @Column(name = "userId", nullable = false)
+    private String userId;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -21,9 +21,10 @@ public class StudyModule {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @OneToMany(mappedBy = "studyModule", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "studyModule", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Flashcard> flashcards;
 
-    @OneToMany(mappedBy = "studyModule", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "studyModule", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Quiz> quizzes;
-} 
+
+}

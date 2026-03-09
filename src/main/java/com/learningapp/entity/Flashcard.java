@@ -1,22 +1,28 @@
 package com.learningapp.entity;
 
-import javax.persistence.*;
-import lombok.*;
+import com.learningapp.enums.FlashcardStatus;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name = "flashcards")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class Flashcard {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@Where(clause = "is_delete = false")
+public class Flashcard extends BaseEntity {
 
-    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
-    private String content;
+    @Column(name = "question", nullable = false, columnDefinition = "TEXT")
+    private String question;
 
-    @Column(name = "status", nullable = false, length = 10)
-    private String status; // "LEARN" or "KNOWN"
+    @Column(name = "answer", nullable = false, columnDefinition = "TEXT")
+    private String answer;
+
+    @Enumerated(EnumType.STRING)
+    private FlashcardStatus status;
+
+    @ManyToOne
+    @JoinColumn(name = "study_module_id", nullable = false)
+    private StudyModule studyModule;
 }

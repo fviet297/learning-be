@@ -1,0 +1,141 @@
+name: Java CI/CD
+run-name: ${{ github.event.pull_request.title || 'Deployment' }} ${{ github.ref_name }}
+
+permissions:
+  contents: read
+  packages: write
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: ["main"]
+  push:
+    tags:
+      - 'v*'
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: "Run deploy job"
+        required: false
+        default: true
+        type: boolean
+
+env:
+  SERVICE_NAME: learning-be
+  JAVA_VERSION: '17'
+  REGISTRY_IMAGE: ghcr.io/${{ github.repository }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: maven
+
+      - name: Run tests
+        run: mvn -B test
+        env:
+          POSTGRES_URL: jdbc:postgresql://localhost:5432/learning_app
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          DDL_AUTO: update
+          JWT_SECRET: test-secret-key-test-secret-key
+          JWT_EXPIRED: 86400000
+          SALT_KEY: test-salt-key
+          OPENROUTER_API_KEY: test-openrouter-key
+          OPENROUTER_API_URL: https://openrouter.ai/api/v1
+          OPENROUTER_API_MODEL: openai/gpt-4o-mini
+
+  build-and-push:
+    if: github.event_name == 'push' || github.event_name == 'release'
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      image: ${{ steps.version.outputs.image }}
+      registry_image: ${{ steps.version.outputs.registry_image }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            VERSION="${{ github.event.release.tag_name }}"
+          else
+            VERSION="${GITHUB_REF_NAME}"
+          fi
+          IMAGE=$(echo "${{ env.REGISTRY_IMAGE }}" | tr '[:upper:]' '[:lower:]')
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "image=${IMAGE}:${VERSION}" >> $GITHUB_OUTPUT
+          echo "registry_image=${IMAGE}" >> $GITHUB_OUTPUT
+
+      - name: Extract metadata for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ steps.version.outputs.registry_image }}
+          tags: |
+            type=raw,value=${{ steps.version.outputs.version }}
+            type=raw,value=latest,enable=${{ github.event_name == 'release' }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    name: Trigger K8s Deploy
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event_name == 'release'
+
+    steps:
+      - name: Trigger deployment to K8s config repo
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.DEPLOY_PAT }}
+          repository: ${{ secrets.K8S_CONFIG_REPO }}
+          event-type: deploy-image
+          client-payload: |
+            {
+              "service": "${{ env.SERVICE_NAME }}",
+              "version": "${{ needs.build-and-push.outputs.version }}",
+              "image": "${{ needs.build-and-push.outputs.image }}",
+              "environment": "prod"
+            }
+
+      - name: Summary
+        run: |
+          echo "### 🚀 K8s Deployment Triggered" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Property | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Service | ${{ env.SERVICE_NAME }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Image | ${{ needs.build-and-push.outputs.image }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Environment | prod |" >> $GITHUB_STEP_SUMMARY

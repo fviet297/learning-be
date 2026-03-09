@@ -1,43 +1,83 @@
 package com.learningapp.controller;
 
-import com.learningapp.entity.StudyModule;
-import com.learningapp.repository.StudyModuleRepository;
+import com.learningapp.constants.Constants;
+import com.learningapp.dto.PageCustom;
+import com.learningapp.dto.ResponseData;
+import com.learningapp.dto.request.StudyModuleRequest;
+import com.learningapp.dto.response.StudyModuleProjection;
+import com.learningapp.dto.response.StudyModuleResponse;
+import com.learningapp.service.GenerationService;
+import com.learningapp.service.StudyModuleService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/api/study-modules")
+@RequestMapping("/study-modules")
 public class StudyModuleController {
 
-    private final StudyModuleRepository studyModuleRepository;
+    private final StudyModuleService studyModuleService;
+
+    private final GenerationService generationService;
 
     @Autowired
-    public StudyModuleController(StudyModuleRepository studyModuleRepository) {
-        this.studyModuleRepository = studyModuleRepository;
+    public StudyModuleController(StudyModuleService studyModuleService,
+                                 GenerationService generationService) {
+        this.studyModuleService = studyModuleService;
+        this.generationService = generationService;
     }
 
     @PostMapping
-    public ResponseEntity<StudyModule> createStudyModule(@RequestBody StudyModule studyModule) {
-        if (studyModule.getName() == null || studyModule.getName().trim().isEmpty()) {
-            return ResponseEntity.badRequest().build();
-        }
-        StudyModule savedStudyModule = studyModuleRepository.save(studyModule);
-        return ResponseEntity.ok(savedStudyModule);
+    public ResponseEntity<ResponseData> createStudyModule(@Valid @RequestBody StudyModuleRequest studyModuleRequest) {
+        final StudyModuleResponse studyModuleResponse = studyModuleService.create(studyModuleRequest);
+        return ResponseEntity.ok(ResponseData.builder().data(studyModuleResponse).build());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseData> updateStudyModule(@PathVariable String id, @Valid @RequestBody StudyModuleRequest studyModuleRequest) {
+        final StudyModuleResponse studyModuleResponse = studyModuleService.update(id,studyModuleRequest);
+        return ResponseEntity.ok(ResponseData.builder().data(studyModuleResponse).build());
     }
 
     @GetMapping
-    public ResponseEntity<List<StudyModule>> getAllStudyModules() {
-        List<StudyModule> studyModules = studyModuleRepository.findAll();
-        return ResponseEntity.ok(studyModules);
+    public ResponseEntity<ResponseData> getAllStudyModules(
+            @RequestParam(value = Constants.QUERY.PAGE, defaultValue = Constants.QUERY.PAGE_DEFAULT) final int page,
+            @RequestParam(value = Constants.QUERY.SIZE, defaultValue = Constants.QUERY.SIZE_DEFAULT) final int size,
+            @RequestParam(value = Constants.QUERY.SORT, defaultValue = Constants.QUERY.UPDATE_ORDER) final String sort
+    ) {
+        final Pageable pageable = PageRequest.of(page, size, Sort.by(sort).descending());
+        final Page<StudyModuleProjection> pageStudyModules = studyModuleService.getPageStudyModules(pageable);
+
+        if (!pageStudyModules.hasContent()) {
+            return ResponseEntity.noContent().build();
+        }
+        final PageCustom<StudyModuleProjection> pageCustom = PageCustom.from(pageStudyModules);
+        return ResponseEntity.ok(ResponseData.builder().data(pageCustom).build());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<StudyModule> getStudyModuleById(@PathVariable Long id) {
-        StudyModule studyModule = studyModuleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Study module not found with id: " + id));
-        return ResponseEntity.ok(studyModule);
+    public ResponseEntity<ResponseData> getStudyModuleById(@PathVariable String id) {
+        final StudyModuleResponse studyModuleResponse = studyModuleService.getById(id);
+        return ResponseEntity.ok(ResponseData.builder().data(studyModuleResponse).build());
     }
-} 
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseData> deleteModule(@PathVariable final String id) {
+        return ResponseEntity.ok(studyModuleService.deleteModule(id));
+    }
+
+    @PostMapping("/combine")
+    public ResponseEntity<ResponseData> createCombine(@RequestBody StudyModuleRequest studyModuleRequest) {
+        return ResponseEntity.ok(
+                ResponseData.builder()
+                        .data(generationService.generateAndSave(studyModuleRequest))
+                        .build()
+        );
+    }
+
+}

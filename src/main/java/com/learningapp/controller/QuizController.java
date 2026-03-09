@@ -1,10 +1,9 @@
 package com.learningapp.controller;
 
-import com.learningapp.controller.dto.QuizSubmission;
-import com.learningapp.entity.Quiz;
-import com.learningapp.entity.QuizResult;
-import com.learningapp.repository.QuizRepository;
-import com.learningapp.repository.QuizResultRepository;
+import com.learningapp.dto.ResponseData;
+import com.learningapp.dto.request.QuizRequestBulk;
+import com.learningapp.dto.response.QuizResponse;
+import com.learningapp.service.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,48 +11,39 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/quizzes")
+@RequestMapping("/quizzes")
 public class QuizController {
 
-    private final QuizRepository quizRepository;
-    private final QuizResultRepository quizResultRepository;
+    private final QuizService quizService;
 
     @Autowired
-    public QuizController(QuizRepository quizRepository, QuizResultRepository quizResultRepository) {
-        this.quizRepository = quizRepository;
-        this.quizResultRepository = quizResultRepository;
+    public QuizController(QuizService quizService) {
+        this.quizService = quizService;
     }
 
     @PostMapping
-    public ResponseEntity<Quiz> createQuiz(@RequestBody Quiz quiz) {
-        if (quiz.getQuestion() == null || quiz.getQuestion().trim().isEmpty() ||
-                quiz.getOptions() == null || quiz.getCorrectAnswer() < 0 || quiz.getCorrectAnswer() > 3) {
-            return ResponseEntity.badRequest().build();
-        }
-        Quiz savedQuiz = quizRepository.save(quiz);
-        return ResponseEntity.ok(savedQuiz);
+    public ResponseEntity<ResponseData> createQuiz(@RequestBody QuizRequestBulk quizRequestBulk) {
+        final List<QuizResponse> quizResponse = quizService.create(quizRequestBulk);
+        return ResponseEntity.ok(ResponseData.builder().data(quizResponse).build());
     }
 
-    @GetMapping
-    public ResponseEntity<List<Quiz>> getAllQuizzes() {
-        List<Quiz> quizzes = quizRepository.findAll();
-        return ResponseEntity.ok(quizzes);
+    @PostMapping("/gen")
+    public ResponseEntity<ResponseData> createQuizGen(@RequestBody QuizRequestBulk quizRequestBulk) {
+        final List<QuizResponse> quizResponse = quizService.createGen(quizRequestBulk);
+        return ResponseEntity.ok(ResponseData.builder().data(quizResponse).build());
     }
 
-    @PostMapping("/submit")
-    public ResponseEntity<QuizResult> submitQuiz(@RequestBody QuizSubmission submission) {
-        if (submission.getQuizId() == null || submission.getSelectedOption() < 0 || submission.getSelectedOption() > 3) {
-            return ResponseEntity.badRequest().build();
+    @GetMapping("/{studyModuleId}")
+    public ResponseEntity<ResponseData> getAllQuizzesByStudyModuleId(@PathVariable final String studyModuleId) {
+        final List<QuizResponse> quizResponses = quizService.getQuizzesByStudyModuleId(studyModuleId);
+        if (quizResponses.isEmpty()) {
+            return ResponseEntity.noContent().build();
         }
-        Quiz quiz = quizRepository.findById(submission.getQuizId())
-                .orElseThrow(() -> new RuntimeException("Quiz not found with id: " + submission.getQuizId()));
-        int score = submission.getSelectedOption() == quiz.getCorrectAnswer() ? 10 : 0;
+        return ResponseEntity.ok(ResponseData.builder().data(quizResponses).build());
+    }
 
-        QuizResult result = new QuizResult();
-        result.setUserId(submission.getUserId());
-        result.setQuizId(submission.getQuizId());
-        result.setScore(score);
-        QuizResult savedResult = quizResultRepository.save(result);
-        return ResponseEntity.ok(savedResult);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseData> deleteQuiz(@PathVariable final String id) {
+        return ResponseEntity.ok(quizService.deleteQuiz(id));
     }
 }
