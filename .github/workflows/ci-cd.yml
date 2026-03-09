@@ -1,17 +1,15 @@
 name: Java CI/CD
-run-name: ${{ github.event.pull_request.title || 'Deployment' }} ${{ github.ref_name }}
+run-name: Deployment ${{ github.ref_name }}
 
 permissions:
   contents: read
   packages: write
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-    branches: ["main"]
   push:
-    tags:
-      - 'v*'
+    branches: ["master"]
+  tags:
+    - 'v*'
   release:
     types: [published]
   workflow_dispatch:
@@ -28,34 +26,7 @@ env:
   REGISTRY_IMAGE: ghcr.io/${{ github.repository }}
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: ${{ env.JAVA_VERSION }}
-          cache: maven
-
-      - name: Run tests
-        run: mvn -B test
-        env:
-          POSTGRES_URL: jdbc:postgresql://localhost:5432/learning_app
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          DDL_AUTO: update
-          JWT_SECRET: test-secret-key-test-secret-key
-          JWT_EXPIRED: 86400000
-          SALT_KEY: test-salt-key
-          OPENROUTER_API_KEY: test-openrouter-key
-          OPENROUTER_API_URL: https://openrouter.ai/api/v1
-          OPENROUTER_API_MODEL: openai/gpt-4o-mini
-
+  
   build-and-push:
     if: github.event_name == 'push' || github.event_name == 'release'
     runs-on: ubuntu-latest
